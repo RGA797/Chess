@@ -201,8 +201,6 @@ class Game {
 
     fun undoMove(){
         val reverseMove = Move(movesPerformed[movesPerformed.size-1].newPosition, movesPerformed[movesPerformed.size-1].oldPosition, false, null, null)
-
-
         movePiece(reverseMove)
         //reset move counter to what it was before
         board[reverseMove.newPosition[0]][reverseMove.newPosition[1]].piece!!.decrementMoveCounter()

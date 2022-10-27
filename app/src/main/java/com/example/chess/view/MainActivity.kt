@@ -51,17 +51,11 @@ fun MyApp(content: @Composable () -> Unit) {
 @Composable
 fun Board(){
     val game: MutableState<Game> = remember { mutableStateOf(Game())}
-        Box(Modifier.fillMaxSize().aspectRatio(1f)) {
-            Column {
-                for (i in 0..7) {
-            }
-        }
-    }
 }
 
 
 @Composable
-fun Block(isBlack: Boolean, piece: String?){
+fun Block(isBlack: Boolean, game: Game){
     Canvas(modifier = Modifier.fillMaxSize(1f)) {
         drawRect(color = if (isBlack) Color(0xFF383435) else Color(0xFFE4E4C3))
     }
@@ -70,8 +64,9 @@ fun Block(isBlack: Boolean, piece: String?){
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    val game = Game()
+    val game: MutableState<Game> = remember { mutableStateOf(Game())}
     MyApp {
+
         Board()
     }
 }

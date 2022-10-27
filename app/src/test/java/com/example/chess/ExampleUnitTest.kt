@@ -36,7 +36,6 @@ class ExampleUnitTest {
         game.resolveMove(Move(listOf(3,0), listOf(4,0), false, null,null ))
         game.resolveMove(Move(listOf(6,1), listOf(4,1), false, null,"double"))
 
-
         val boardBeforeResolveUndo = game.board
         val whiteMoves = game.getPossibleMoves("white", game.board, game.movesPerformed[game.movesPerformed.size-1])
         for (i in whiteMoves.indices){
