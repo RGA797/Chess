@@ -6,10 +6,10 @@ class Pawn(team: String) : Piece(team) {
         val currentBlock = gameState[piecePosition[0]][piecePosition[1]]
         var moveIncrement: Int = 0
         //as pawn moves differ depending on teams we need to depend on that
-        if (currentBlock.piece!!.team == "white"){
+        if (currentBlock.piece.value!!.team == "white"){
             moveIncrement = 1
         }
-        if (currentBlock.piece!!.team == "black"){
+        if (currentBlock.piece.value!!.team == "black"){
             moveIncrement = -1
         }
         //right for white, left for black
@@ -20,7 +20,7 @@ class Pawn(team: String) : Piece(team) {
         try {
             val newPiecePosition = listOf(piecePosition[0]+ moveIncrement, piecePosition[1])
             val newBlock = gameState[newPiecePosition[0]][newPiecePosition[1]]
-            if (newBlock.piece == null) {
+            if (newBlock.piece.value == null) {
                 if (newPiecePosition[0] == 0 || newPiecePosition[0] == 7 ){
                     moveList.add(Move(piecePosition, newPiecePosition, false, null, "promotion"))
                 }
@@ -33,13 +33,13 @@ class Pawn(team: String) : Piece(team) {
         }
         //double move check
         try {
-            if (currentBlock.piece!!.moveCounter == 0) {
+            if (currentBlock.piece.value!!.moveCounter == 0) {
                 val blockOnePosition = listOf(piecePosition[0] + moveIncrement, piecePosition[1])
                 val stepOneBlock = gameState[blockOnePosition[0]][blockOnePosition[1]]
 
                 val blockTwoPosition = listOf(piecePosition[0]+ moveIncrement*2, piecePosition[1] )
                 val stepTwoBlock = gameState[blockTwoPosition[0]][blockTwoPosition[1]]
-                if (stepOneBlock.piece == null && stepTwoBlock.piece == null) {
+                if (stepOneBlock.piece.value == null && stepTwoBlock.piece.value == null) {
                     moveList.add(Move(piecePosition, blockTwoPosition, false, null, "double"))
                 }
             }
@@ -50,8 +50,8 @@ class Pawn(team: String) : Piece(team) {
         //first cross take
         try {
             val firstCrossBlock = gameState[crossOnePosition[0]][crossOnePosition[1]]
-            if (firstCrossBlock.piece != null ){
-                if (firstCrossBlock.piece!!.team != currentBlock.piece!!.team){
+            if (firstCrossBlock.piece.value != null ){
+                if (firstCrossBlock.piece.value!!.team != currentBlock.piece.value!!.team){
                     if (crossOnePosition[0] == 0 || crossOnePosition[0] == 7 ){
                         moveList.add(Move(piecePosition, crossOnePosition, true, crossOnePosition, "promotion"))
                     }
@@ -67,8 +67,8 @@ class Pawn(team: String) : Piece(team) {
         //second cross take check
         try {
             val secondCrossBlock = gameState[crossTwoPosition[0]][crossTwoPosition[1]]
-            if (secondCrossBlock.piece != null ){
-                if (secondCrossBlock.piece!!.team != currentBlock.piece!!.team){
+            if (secondCrossBlock.piece.value != null ){
+                if (secondCrossBlock.piece.value!!.team != currentBlock.piece.value!!.team){
                     if (crossTwoPosition[0] == 0 || crossTwoPosition[0] == 7 ){
                         moveList.add(Move(piecePosition, crossTwoPosition, true, crossTwoPosition, "promotion"))
                     }
@@ -88,7 +88,7 @@ class Pawn(team: String) : Piece(team) {
                     //if they doubled left to piece
                     if (lastMove.newPosition[0] == piecePosition[0] && piecePosition[1] == (lastMove.newPosition[1]+1)) {
                             //take to the left (differs for teams)
-                            if (currentBlock.piece!!.team == "black" && gameState[lastMove.newPosition[0]][lastMove.newPosition[1]].piece!!.team == "white") {
+                            if (currentBlock.piece.value!!.team == "black" && gameState[lastMove.newPosition[0]][lastMove.newPosition[1]].piece.value!!.team == "white") {
                                 moveList.add(
                                     Move(
                                         piecePosition,
@@ -99,7 +99,7 @@ class Pawn(team: String) : Piece(team) {
                                     )
                                 )
                             }
-                            if (currentBlock.piece!!.team == "white" && gameState[lastMove.newPosition[0]][lastMove.newPosition[1]].piece!!.team == "black") {
+                            if (currentBlock.piece.value!!.team == "white" && gameState[lastMove.newPosition[0]][lastMove.newPosition[1]].piece.value!!.team == "black") {
                                 moveList.add(
                                     Move(
                                         piecePosition,
@@ -125,7 +125,7 @@ class Pawn(team: String) : Piece(team) {
                     //enemy in same row, right to
                     if (lastMove.newPosition[0] == piecePosition[0] && piecePosition[1] == (lastMove.newPosition[1]-1))  {
                             //take to the right (location is a bit wonky due to team differences)
-                            if (currentBlock.piece!!.team == "black" && gameState[lastMove.newPosition[0]][lastMove.newPosition[1]].piece!!.team == "white") {
+                            if (currentBlock.piece.value!!.team == "black" && gameState[lastMove.newPosition[0]][lastMove.newPosition[1]].piece.value!!.team == "white") {
                                 moveList.add(
                                     Move(
                                         piecePosition,
@@ -136,7 +136,7 @@ class Pawn(team: String) : Piece(team) {
                                     )
                                 )
                             }
-                            if (currentBlock.piece!!.team == "white" && gameState[lastMove.newPosition[0]][lastMove.newPosition[1]].piece!!.team == "black") {
+                            if (currentBlock.piece.value!!.team == "white" && gameState[lastMove.newPosition[0]][lastMove.newPosition[1]].piece.value!!.team == "black") {
                                 moveList.add(
                                     Move(
                                         piecePosition,

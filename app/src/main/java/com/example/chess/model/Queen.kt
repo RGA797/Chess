@@ -9,11 +9,11 @@ class Queen(team: String) : Piece(team) {
             try {
                 val newPiecePosition = listOf(piecePosition[0]+(i*xOffset), piecePosition[1]+(i*yOffset))
                 val newBlock = gameState[newPiecePosition[0]][newPiecePosition[1]]
-                if (newBlock.piece == null ){
+                if (newBlock.piece.value == null ){
                     moveList.add(Move(piecePosition, newPiecePosition, false, null, null))
                 }
-                else if (newBlock.piece != null){
-                    if (newBlock.piece!!.team != currentBlock.piece!!.team){
+                else if (newBlock.piece.value != null){
+                    if (newBlock.piece.value!!.team != currentBlock.piece.value!!.team){
                         moveList.add(Move(piecePosition, newPiecePosition, true, newPiecePosition, null))
                     }
                     break

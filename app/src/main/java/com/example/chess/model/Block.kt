@@ -1,50 +1,54 @@
 package com.example.chess.model
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+
 class Block (typeString: String?) {
-    var piece: Piece? = null
+    var piece: MutableState<Piece?> = mutableStateOf(null)
     init {
         if (typeString == "white king") {
-            piece = King("white")
+            piece = mutableStateOf(King("white"))
         }
         else if (typeString == "white queen") {
-            piece = Queen("white")
+            piece = mutableStateOf(Queen("white"))
         }
         else if (typeString == "white pawn") {
-            piece = Pawn("white")
+            piece = mutableStateOf(Pawn("white"))
         }
         else if (typeString == "white rook") {
-            piece = Rook("white")
+            piece = mutableStateOf(Rook("white"))
         }
         else if  (typeString == "white knight") {
-            piece = Knight("white")
+            piece = mutableStateOf(Knight("white"))
         }
         else if  (typeString == "white bishop") {
-            piece = Bishop("white")
+            piece = mutableStateOf(Bishop("white"))
         }
         else if (typeString == "black king") {
-            piece = King("black")
+            piece = mutableStateOf(King("black"))
         }
         else if (typeString == "black queen") {
-            piece = Queen("black")
+            piece = mutableStateOf(Queen("black"))
         }
         else if (typeString == "black queen") {
-            piece = Queen("black")
+            piece = mutableStateOf(Queen("black"))
         }
         else if (typeString == "black pawn") {
-            piece = Pawn("black")
+            piece = mutableStateOf(Pawn("black"))
         }
         else if (typeString == "black rook") {
-            piece = Rook("black")
+            piece = mutableStateOf(Rook("black"))
         }
         else if (typeString == "black knight") {
-            piece = Knight("black")
+            piece = mutableStateOf(Knight("black"))
         }
         else if (typeString == "black bishop") {
-            piece = Bishop("black")
+            piece = mutableStateOf(Bishop("black"))
         }
-        val test = 0
     }
+
     fun changePiece(newPiece: Piece?){
-        piece = newPiece
+        piece.value = newPiece
     }
 }

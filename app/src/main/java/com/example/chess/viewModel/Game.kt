@@ -1,11 +1,12 @@
 package com.example.chess.viewModel
 
+import androidx.compose.runtime.*
 import com.example.chess.model.*
 
 class Game {
-    var board: MutableList<MutableList<Block>> = ArrayList()
-    var movesPerformed: MutableList<Move> = mutableListOf()
-    private var destroyedQueue: MutableList<Piece> = mutableListOf()
+    var board: MutableList<MutableList<Block>> = mutableStateListOf()
+    var movesPerformed: MutableList<Move> = mutableStateListOf()
+    private var destroyedQueue: MutableList<Piece> = mutableStateListOf()
     init {
         for (i in 0..7)
             if (i == 0 ){
@@ -73,8 +74,8 @@ class Game {
         if (team == "white"){
             for (i in gameState.indices){
                 for (j in gameState[i].indices){
-                    if (gameState[i][j].piece != null) {
-                        if (gameState[i][j].piece is King && gameState[i][j].piece!!.team == team){
+                    if (gameState[i][j].piece.value != null) {
+                        if (gameState[i][j].piece.value is King && gameState[i][j].piece.value!!.team == team){
                             kingPosition = listOf(i,j)
                         }
                     }
@@ -85,8 +86,8 @@ class Game {
         else if (team == "black"){
             for (i in gameState.indices){
                 for (j in gameState[i].indices){
-                    if (gameState[i][j].piece != null) {
-                        if (gameState[i][j].piece is King && gameState[i][j].piece!!.team == team){
+                    if (gameState[i][j].piece.value != null) {
+                        if (gameState[i][j].piece.value is King && gameState[i][j].piece.value!!.team == team){
                             kingPosition = listOf(i,j)
                         }
                     }
@@ -131,9 +132,9 @@ class Game {
         val allPossibleMoves = mutableListOf<Move>()
         for (i in board.indices) {
             for (j in board[i].indices) {
-                val piece = board[i][j].piece
+                val piece = board[i][j].piece.value
                 if (piece != null) {
-                        if (board[i][j].piece!!.team == team) {
+                        if (board[i][j].piece.value!!.team == team) {
                             val moves = piece.possibleMoves(gameState, listOf(i, j), lastMove)
                             for (x in moves.indices) {
                                 allPossibleMoves.add(moves[x])
@@ -149,14 +150,13 @@ class Game {
     private fun movePiece(move: Move){
 
         //piece moved
-        val pieceMoved = board[move.oldPosition[0]][move.oldPosition[1]].piece
-
+        val pieceMoved = board[move.oldPosition[0]][move.oldPosition[1]].piece.value
         board[move.oldPosition[0]][move.oldPosition[1]].changePiece(null)
 
         //removeDestroyedPiece
         if (move.enemyDestroyed){
-            destroyedQueue.add(board[move.enemyDestroyedPosition!![0]][move.enemyDestroyedPosition[1]].piece!!)
-            board[move.enemyDestroyedPosition!![0]][move.enemyDestroyedPosition[1]].changePiece(null)
+            destroyedQueue.add(board[move.enemyDestroyedPosition!![0]][move.enemyDestroyedPosition[1]].piece.value!!)
+            board[move.enemyDestroyedPosition[0]][move.enemyDestroyedPosition[1]].changePiece(null)
         }
         //move piece
         board[move.newPosition[0]][move.newPosition[1]].changePiece(pieceMoved)
@@ -173,7 +173,7 @@ class Game {
             //nothing new happens
         }
         else if (move.specialMove == "promotion"){
-            var movedPiece = board[move.newPosition[0]][move.newPosition[1]].piece!!
+            var movedPiece = board[move.newPosition[0]][move.newPosition[1]].piece.value!!
             val pawnMoveCounter = movedPiece.moveCounter
 
             //make queen object and replace pawn
@@ -203,14 +203,14 @@ class Game {
         val reverseMove = Move(movesPerformed[movesPerformed.size-1].newPosition, movesPerformed[movesPerformed.size-1].oldPosition, false, null, null)
         movePiece(reverseMove)
         //reset move counter to what it was before
-        board[reverseMove.newPosition[0]][reverseMove.newPosition[1]].piece!!.decrementMoveCounter()
-        board[reverseMove.newPosition[0]][reverseMove.newPosition[1]].piece!!.decrementMoveCounter()
+        board[reverseMove.newPosition[0]][reverseMove.newPosition[1]].piece.value!!.decrementMoveCounter()
+        board[reverseMove.newPosition[0]][reverseMove.newPosition[1]].piece.value!!.decrementMoveCounter()
 
         if (movesPerformed[movesPerformed.size-1].specialMove == "en passant"  || movesPerformed[movesPerformed.size-1].specialMove == "double"){
             //nothing new happens
         }
         else if (movesPerformed[movesPerformed.size-1].specialMove == "promotion"){
-            var movedPiece = board[reverseMove.newPosition[0]][reverseMove.newPosition[1]].piece!!
+            var movedPiece = board[reverseMove.newPosition[0]][reverseMove.newPosition[1]].piece.value!!
             //make pawn and replace queen
             val newPawn = Pawn(movedPiece.team)
             newPawn.setCounter(movedPiece.moveCounter)
@@ -243,9 +243,9 @@ class Game {
         var value = 0
         for(i in gameState.indices){
             for (j in gameState[i].indices){
-                if (gameState[i][j].piece != null){
-                    if (gameState[i][j].piece!!.team == "black"){
-                        if (gameState[i][j].piece is King){
+                if (gameState[i][j].piece.value != null){
+                    if (gameState[i][j].piece.value!!.team == "black"){
+                        if (gameState[i][j].piece.value is King){
                             val enemyMoves = getValidMoves(board, "white")
                             if (kingIsMate(enemyMoves, listOf(i,j))){
                                 value -= 100000
@@ -257,25 +257,25 @@ class Game {
                                 value += 10000
                             }
                         }
-                        if (gameState[i][j].piece is Queen){
+                        if (gameState[i][j].piece.value is Queen){
                             value += 900
                         }
-                        if (gameState[i][j].piece is Rook){
+                        if (gameState[i][j].piece.value is Rook){
                             value += 500
                         }
-                        if (gameState[i][j].piece is Bishop){
+                        if (gameState[i][j].piece.value is Bishop){
                             value += 300
                         }
-                        if (gameState[i][j].piece is Knight){
+                        if (gameState[i][j].piece.value is Knight){
                             value += 300
                         }
-                        if (gameState[i][j].piece is Pawn){
+                        if (gameState[i][j].piece.value is Pawn){
                             value += 300
                         }
                     }
 
-                    if (gameState[i][j].piece!!.team == "white"){
-                        if (gameState[i][j].piece is King){
+                    if (gameState[i][j].piece.value!!.team == "white"){
+                        if (gameState[i][j].piece.value is King){
                             val enemyMoves = getValidMoves(board, "black")
                             if (kingIsMate(enemyMoves, listOf(i,j))){
                                 value += 100000
@@ -287,19 +287,19 @@ class Game {
                                 value -= 10000
                             }
                         }
-                        if (gameState[i][j].piece is Queen){
+                        if (gameState[i][j].piece.value is Queen){
                             value -= 900
                         }
-                        if (gameState[i][j].piece is Rook){
+                        if (gameState[i][j].piece.value is Rook){
                             value -= 500
                         }
-                        if (gameState[i][j].piece is Bishop){
+                        if (gameState[i][j].piece.value is Bishop){
                             value -= 300
                         }
-                        if (gameState[i][j].piece is Knight){
+                        if (gameState[i][j].piece.value is Knight){
                             value -= 300
                         }
-                        if (gameState[i][j].piece is Pawn){
+                        if (gameState[i][j].piece.value is Pawn){
                             value -= 300
                         }
                     }
