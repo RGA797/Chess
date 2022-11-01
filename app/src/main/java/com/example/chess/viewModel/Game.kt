@@ -148,7 +148,6 @@ class Game {
 
     //moves a piece if possible
     private fun movePiece(move: Move){
-
         //piece moved
         val pieceMoved = board[move.oldPosition[0]][move.oldPosition[1]].piece.value
         board[move.oldPosition[0]][move.oldPosition[1]].changePiece(null)
@@ -200,42 +199,49 @@ class Game {
     }
 
     fun undoMove(){
-        val reverseMove = Move(movesPerformed[movesPerformed.size-1].newPosition, movesPerformed[movesPerformed.size-1].oldPosition, false, null, null)
-        movePiece(reverseMove)
-        //reset move counter to what it was before
-        board[reverseMove.newPosition[0]][reverseMove.newPosition[1]].piece.value!!.decrementMoveCounter()
-        board[reverseMove.newPosition[0]][reverseMove.newPosition[1]].piece.value!!.decrementMoveCounter()
+        if (movesPerformed.size != 0) {
+            val reverseMove = Move(
+                movesPerformed[movesPerformed.size - 1].newPosition,
+                movesPerformed[movesPerformed.size - 1].oldPosition,
+                false,
+                null,
+                null
+            )
+            movePiece(reverseMove)
+            //reset move counter to what it was before
+            board[reverseMove.newPosition[0]][reverseMove.newPosition[1]].piece.value!!.decrementMoveCounter()
+            board[reverseMove.newPosition[0]][reverseMove.newPosition[1]].piece.value!!.decrementMoveCounter()
 
-        if (movesPerformed[movesPerformed.size-1].specialMove == "en passant"  || movesPerformed[movesPerformed.size-1].specialMove == "double"){
-            //nothing new happens
-        }
-        else if (movesPerformed[movesPerformed.size-1].specialMove == "promotion"){
-            var movedPiece = board[reverseMove.newPosition[0]][reverseMove.newPosition[1]].piece.value!!
-            //make pawn and replace queen
-            val newPawn = Pawn(movedPiece.team)
-            newPawn.setCounter(movedPiece.moveCounter)
-            movedPiece  = newPawn
-            board[reverseMove.newPosition[0]][reverseMove.newPosition[1]].changePiece(movedPiece)
-        }
-
-        else if (movesPerformed[movesPerformed.size-1].specialMove == "castling"){
-            //king side castling
-            if (movesPerformed[movesPerformed.size-1].newPosition[0] == 0 && movesPerformed[movesPerformed.size-1].newPosition[1] == 6){
-                movePiece(Move(listOf(0,5),listOf(0,7), false,null,null))
+            if (movesPerformed[movesPerformed.size - 1].specialMove == "en passant" || movesPerformed[movesPerformed.size - 1].specialMove == "double") {
+                //nothing new happens
+            } else if (movesPerformed[movesPerformed.size - 1].specialMove == "promotion") {
+                var movedPiece =
+                    board[reverseMove.newPosition[0]][reverseMove.newPosition[1]].piece.value!!
+                //make pawn and replace queen
+                val newPawn = Pawn(movedPiece.team)
+                newPawn.setCounter(movedPiece.moveCounter)
+                movedPiece = newPawn
+                board[reverseMove.newPosition[0]][reverseMove.newPosition[1]].changePiece(movedPiece)
+            } else if (movesPerformed[movesPerformed.size - 1].specialMove == "castling") {
+                //king side castling
+                if (movesPerformed[movesPerformed.size - 1].newPosition[0] == 0 && movesPerformed[movesPerformed.size - 1].newPosition[1] == 6) {
+                    movePiece(Move(listOf(0, 5), listOf(0, 7), false, null, null))
+                }
+                //queen side castling
+                if (movesPerformed[movesPerformed.size - 1].newPosition[0] == 0 && movesPerformed[movesPerformed.size - 1].newPosition[1] == 1) {
+                    movePiece(Move(listOf(0, 2), listOf(0, 0), false, null, null))
+                }
             }
-            //queen side castling
-            if (movesPerformed[movesPerformed.size-1].newPosition[0] == 0 && movesPerformed[movesPerformed.size-1].newPosition[1] == 1){
-                movePiece(Move(listOf(0,2),listOf(0,0), false,null,null))
+
+            if (movesPerformed[movesPerformed.size - 1].enemyDestroyed) {
+
+                board[movesPerformed[movesPerformed.size - 1].enemyDestroyedPosition!![0]][movesPerformed[movesPerformed.size - 1].enemyDestroyedPosition!![1]].changePiece(
+                    destroyedQueue[destroyedQueue.size - 1]
+                )
+                destroyedQueue.removeLast()
             }
+            movesPerformed.removeLast()
         }
-
-        if (movesPerformed[movesPerformed.size-1].enemyDestroyed){
-
-            board[movesPerformed[movesPerformed.size-1].enemyDestroyedPosition!![0]][movesPerformed[movesPerformed.size-1].enemyDestroyedPosition!![1]].changePiece(destroyedQueue[destroyedQueue.size-1])
-            destroyedQueue.removeLast()
-        }
-
-        movesPerformed.removeLast()
     }
 
     //returns the value of a game (this is the heuristics for our algorithm)
