@@ -49,24 +49,51 @@ class Game {
             enemyMoves = getPossibleMoves("white",gameState,lastMove)
         }
 
-        val kingPosition = getKingPosition(team, gameState)
-        val kingIsCheck = kingIsCheck(enemyMoves, kingPosition)
-
-        if(kingIsMate(enemyMoves, kingPosition) ){
+        if(kingIsMate(enemyMoves, getKingPosition(team, gameState)) ){
             return validMoves
         }
 
-        if (kingIsCheck){
-            for (i in teamMoves.indices){
-                if (teamMoves[i].oldPosition == kingPosition){
-                    validMoves.add(teamMoves[i])
+        if (kingIsCheck(enemyMoves, getKingPosition(team, gameState))) {
+            for (i in teamMoves.indices) {
+                if (teamMoves[i].oldPosition == getKingPosition(team, gameState)) {
+                    resolveMove(teamMoves[i])
+                    if (team == "white"){
+                        enemyMoves = getPossibleMoves("black",gameState,lastMove)
+                    }
+                    if (team == "black"){
+                        enemyMoves = getPossibleMoves("white",gameState,lastMove)
+                    }
+                    if (kingIsCheck(enemyMoves, getKingPosition(team, gameState))) {
+                        undoMove()
+                        continue
+                    } else {
+                        validMoves.add(teamMoves[i])
+                        undoMove()
+                    }
                 }
             }
+            return validMoves
         }
         else{
-            return teamMoves
+            for (i in teamMoves.indices){
+                    resolveMove(teamMoves[i])
+                    if (team == "white"){
+                        enemyMoves = getPossibleMoves("black",gameState,lastMove)
+                    }
+                    if (team == "black"){
+                        enemyMoves = getPossibleMoves("white",gameState,lastMove)
+                    }
+                    if (kingIsCheck(enemyMoves, getKingPosition(team, gameState))){
+                        undoMove()
+                        continue
+                    }
+                    else {
+                        validMoves.add(teamMoves[i])
+                        undoMove()
+                    }
+            }
+            return validMoves
         }
-        return validMoves
     }
 
     fun getKingPosition(team: String, gameState: MutableList<MutableList<Block>>): List<Int> {
@@ -226,10 +253,14 @@ class Game {
                 //king side castling
                 if (movesPerformed[movesPerformed.size - 1].newPosition[0] == 0 && movesPerformed[movesPerformed.size - 1].newPosition[1] == 6) {
                     movePiece(Move(listOf(0, 5), listOf(0, 7), false, null, null))
+                    board[0][7].piece.value!!.decrementMoveCounter()
+                    board[0][7].piece.value!!.decrementMoveCounter()
                 }
                 //queen side castling
                 if (movesPerformed[movesPerformed.size - 1].newPosition[0] == 0 && movesPerformed[movesPerformed.size - 1].newPosition[1] == 1) {
                     movePiece(Move(listOf(0, 2), listOf(0, 0), false, null, null))
+                    board[0][0].piece.value!!.decrementMoveCounter()
+                    board[0][0].piece.value!!.decrementMoveCounter()
                 }
             }
 

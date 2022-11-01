@@ -1,5 +1,7 @@
 package com.example.chess.model
 
+import com.example.chess.viewModel.Game
+
 class King(team: String) : Piece(team) {
     private var moveList: MutableList<Move?> = mutableListOf()
 
@@ -85,34 +87,68 @@ class King(team: String) : Piece(team) {
                     if (gameState[i][j].piece.value!!.team != gameState[piecePosition[0]][piecePosition[1]].piece.value!!.team){
                         //because kings would ask eachother for their position otherwise, i make some custom code to check if king is around
                         if(gameState[i][j].piece.value!! is King){
-                            for (i in moveList.indices){
-                                if (moveList[i] != null) {
+                            for (x in moveList.indices){
+                                if (moveList[x] != null) {
                                     //basically asking if the move ends up next to the enemy king
-                                    if (moveList[i]!!.newPosition == listOf(i - 1, j) ||
-                                        moveList[i]!!.newPosition == listOf(i - 1, j - 1) ||
-                                        moveList[i]!!.newPosition == listOf(i - 1, j + 1) ||
-                                        moveList[i]!!.newPosition == listOf(i + 1, j) ||
-                                        moveList[i]!!.newPosition == listOf(i + 1, j + 1) ||
-                                        moveList[i]!!.newPosition == listOf(i + 1, j - 1) ||
-                                        moveList[i]!!.newPosition == listOf(i, j + 1) ||
-                                        moveList[i]!!.newPosition == listOf(i, j - 1)
+                                    if (moveList[x]!!.newPosition == listOf(i - 1, j) ||
+                                        moveList[x]!!.newPosition == listOf(i - 1, j - 1) ||
+                                        moveList[x]!!.newPosition == listOf(i - 1, j + 1) ||
+                                        moveList[x]!!.newPosition == listOf(i + 1, j) ||
+                                        moveList[x]!!.newPosition == listOf(i + 1, j + 1) ||
+                                        moveList[x]!!.newPosition == listOf(i + 1, j - 1) ||
+                                        moveList[x]!!.newPosition == listOf(i, j + 1) ||
+                                        moveList[x]!!.newPosition == listOf(i, j - 1)
                                     ) {
-                                        continue
+                                        moveList[x] = null
                                     } else {
-                                        moveList[i] = null
+                                        continue
                                     }
                                 }
                             }
                             continue
                         }
-                        val enemyPieceMoves = gameState[i][j].piece.value!!.possibleMoves(gameState, listOf(i,j),null)
-                        for (x in moveList.indices) {
-                            for (y in enemyPieceMoves.indices) {
+                        if (gameState[i][j].piece.value is Pawn){
+                            var moveIncrement = 0
+                            if (gameState[i][j].piece.value!!.team == "white"){
+                                moveIncrement = 1
+                            }
+                            if (gameState[i][j].piece.value!!.team == "black"){
+                                moveIncrement = -1
+                            }
+                            //right for white, left for black
+                            val crossOnePosition = listOf(i + moveIncrement, j + moveIncrement)
+                            //left for white, right for black
+                            val crossTwoPosition = listOf(i + moveIncrement, j - moveIncrement)
+
+                            for (x in moveList.indices) {
                                 if (moveList[x] != null) {
-                                    if (moveList[x]!!.newPosition == enemyPieceMoves[y].newPosition) {
+                                    if (moveList[x]!!.newPosition[0] == crossOnePosition[0] && moveList[x]!!.newPosition[1] == crossOnePosition[1]) {
+                                        moveList[x] = null
+                                        continue
+                                        }
+                                    if (moveList[x]!!.newPosition[0] == crossTwoPosition[0] && moveList[x]!!.newPosition[1] == crossTwoPosition[1]) {
                                         moveList[x] = null
                                     }
+                            }
+                        }
+                            continue
+                    }
+                        val enemyPieceMoves = gameState[i][j].piece.value!!.possibleMoves(gameState, listOf(i,j),null)
+                            for (y in enemyPieceMoves.indices) {
+                                for (x in moveList.indices) {
+                                    if (moveList[x] != null) {
+                                        if (enemyPieceMoves[y].newPosition[0] == moveList[x]!!.newPosition[0] && enemyPieceMoves[y].newPosition[1] == moveList[x]!!.newPosition[1] ) {
+                                            moveList[x] = null
+                                        }
+                                    }
                                 }
+                            }
+                        }
+                    //cannot capture pieces that are protected, so we check for it
+                    for (x in moveList.indices) {
+                        if (moveList[x] != null) {
+                            if (moveList[x]!!.enemyDestroyed){
+
                             }
                         }
                     }
@@ -126,7 +162,6 @@ class King(team: String) : Piece(team) {
                 cleanMoveList.add(moveList[i]!!)
             }
         }
-
         return cleanMoveList
     }
 
