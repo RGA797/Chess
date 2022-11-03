@@ -37,7 +37,7 @@ class ExampleUnitTest {
         game.resolveMove(Move(listOf(6,1), listOf(4,1), false, null,"double"))
 
         val boardBeforeResolveUndo = game.board
-        val whiteMoves = game.getPossibleMoves("white", game.board, game.movesPerformed[game.movesPerformed.size-1])
+        val whiteMoves = game.getPossibleMoves("white", game.board)
         for (i in whiteMoves.indices){
             if (whiteMoves[i].specialMove == "en passant"){
                 val move =  whiteMoves[i]
@@ -46,7 +46,7 @@ class ExampleUnitTest {
             }
         }
 
-        val blackMoves = game.getPossibleMoves("black", game.board, game.movesPerformed[game.movesPerformed.size-1])
+        val blackMoves = game.getPossibleMoves("black", game.board)
         for (i in blackMoves.indices){
             if (blackMoves[i].specialMove == "en passant"){
                 val move =  blackMoves[i]
@@ -61,14 +61,10 @@ class ExampleUnitTest {
     @Test
     fun time(){
         val game = Game()
-
         //this little test shows that min prefers moves that actually put them ahead in point
-        // depth 6 time: 942239 milis - 4.8 minutes!
-        //depth  4 time: 18822 milis - 0.3 minutes!
         val elapsed = measureTimeMillis {
             game.min(-10000000,1000000, 6)
         }
         print(elapsed)
     }
-
 }

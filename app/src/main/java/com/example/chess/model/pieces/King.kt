@@ -29,17 +29,27 @@ class King(team: String) : Piece(team) {
         }
         if (currentBlock.piece.value!!.team == "black") {
             if (currentBlock.piece.value!!.moveCounter == 0) {
-                if (gameState[7][5].piece.value == null && gameState[7][6].piece.value == null) {
-                    if (gameState[7][7].piece.value!!.moveCounter == 0) {
-                        moveList.add(Move(piecePosition, listOf(7, 6), false, null, "castling"))
-                    }
-                }
-                if (gameState[7][1].piece.value == null && gameState[7][2].piece.value == null && gameState[7][3].piece.value == null) {
-                    if (gameState[7][0].piece.value != null){
-                        if (gameState[7][0].piece.value!!.moveCounter == 0) {
-                            moveList.add(Move(piecePosition, listOf(7, 1), false, null, "castling"))
+                if (gameState[7][5].piece.value == null && gameState[7][6].piece.value == null && gameState[7][7].piece.value != null) {
+                    if (gameState[7][7].piece.value is Rook && gameState[7][7].piece.value!!.team == currentBlock.piece.value!!.team) {
+                        if (gameState[7][7].piece.value!!.moveCounter == 0) {
+                            moveList.add(Move(piecePosition, listOf(7, 6), false, null, "castling"))
                         }
                     }
+                }
+                    if (gameState[7][1].piece.value == null && gameState[7][2].piece.value == null && gameState[7][3].piece.value == null && gameState[7][0].piece.value != null) {
+                        if (gameState[7][0].piece.value is Rook && gameState[7][0].piece.value!!.team == currentBlock.piece.value!!.team) {
+                            if (gameState[7][0].piece.value!!.moveCounter == 0) {
+                                moveList.add(
+                                    Move(
+                                        piecePosition,
+                                        listOf(7, 1),
+                                        false,
+                                        null,
+                                        "castling"
+                                    )
+                                )
+                            }
+                        }
                 }
             }
         }
@@ -130,21 +140,10 @@ class King(team: String) : Piece(team) {
                                     if (moveList[x]!!.newPosition[0] == crossTwoPosition[0] && moveList[x]!!.newPosition[1] == crossTwoPosition[1]) {
                                         moveList[x] = null
                                     }
-                            }
-                        }
-                            continue
-                    }
-                        val enemyPieceMoves = gameState[i][j].piece.value!!.possibleMoves(gameState, listOf(i,j),null)
-                            for (y in enemyPieceMoves.indices) {
-                                for (x in moveList.indices) {
-                                    if (moveList[x] != null) {
-                                        if (enemyPieceMoves[y].newPosition[0] == moveList[x]!!.newPosition[0] && enemyPieceMoves[y].newPosition[1] == moveList[x]!!.newPosition[1] ) {
-                                            moveList[x] = null
-                                        }
-                                    }
                                 }
                             }
                         }
+                    }
                 }
             }
         }

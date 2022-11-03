@@ -5,9 +5,10 @@ import com.example.chess.model.*
 import com.example.chess.model.pieces.*
 
 class Game {
-    var board: MutableList<MutableList<Block>> = mutableStateListOf()
-    var movesPerformed: MutableList<Move> = mutableStateListOf()
-    private var destroyedQueue: MutableList<Piece> = mutableStateListOf()
+    var lastMove: Move? = null
+    var board: MutableList<MutableList<Block>> = mutableListOf()
+    var movesPerformed: MutableList<Move> = mutableListOf()
+    private var destroyedQueue: MutableList<Piece> = mutableListOf()
     init {
         for (i in 0..7)
             if (i == 0 ){
@@ -31,23 +32,15 @@ class Game {
 
     //returns every valid move for current gameState
     fun getValidMoves(gameState: MutableList<MutableList<Block>>, team: String): List<Move> {
-        val lastMove: Move?
-
-        if (movesPerformed.isEmpty()) {
-            lastMove = null
-        }
-        else {
-            lastMove = movesPerformed[movesPerformed.size-1]
-        }
 
         val validMoves = mutableListOf<Move>()
-        val teamMoves = getPossibleMoves(team,gameState,lastMove)
+        val teamMoves = getPossibleMoves(team,gameState)
         var enemyMoves: List<Move> = listOf()
         if (team == "white"){
-            enemyMoves = getPossibleMoves("black",gameState,lastMove)
+            enemyMoves = getPossibleMoves("black",gameState)
         }
         if (team == "black"){
-            enemyMoves = getPossibleMoves("white",gameState,lastMove)
+            enemyMoves = getPossibleMoves("white",gameState)
         }
 
         if(kingIsMate(enemyMoves, getKingPosition(team, gameState)) ){
@@ -59,10 +52,10 @@ class Game {
                 if (teamMoves[i].oldPosition == getKingPosition(team, gameState)) {
                     resolveMove(teamMoves[i])
                     if (team == "white"){
-                        enemyMoves = getPossibleMoves("black",gameState,lastMove)
+                        enemyMoves = getPossibleMoves("black",gameState)
                     }
                     if (team == "black"){
-                        enemyMoves = getPossibleMoves("white",gameState,lastMove)
+                        enemyMoves = getPossibleMoves("white",gameState)
                     }
                     if (kingIsCheck(enemyMoves, getKingPosition(team, gameState))) {
                         undoMove()
@@ -79,10 +72,10 @@ class Game {
             for (i in teamMoves.indices){
                     resolveMove(teamMoves[i])
                     if (team == "white"){
-                        enemyMoves = getPossibleMoves("black",gameState,lastMove)
+                        enemyMoves = getPossibleMoves("black",gameState)
                     }
                     if (team == "black"){
-                        enemyMoves = getPossibleMoves("white",gameState,lastMove)
+                        enemyMoves = getPossibleMoves("white",gameState)
                     }
                     if (kingIsCheck(enemyMoves, getKingPosition(team, gameState))){
                         undoMove()
@@ -156,18 +149,18 @@ class Game {
     }
 
     //returns where any piece can go, regardless of special rules such as check.
-    fun getPossibleMoves(team:String, gameState:MutableList<MutableList<Block>>, lastMove: Move?): MutableList<Move> {
+    fun getPossibleMoves(team:String, gameState:MutableList<MutableList<Block>>,): MutableList<Move> {
         val allPossibleMoves = mutableListOf<Move>()
         for (i in board.indices) {
             for (j in board[i].indices) {
                 val piece = board[i][j].piece.value
                 if (piece != null) {
-                        if (board[i][j].piece.value!!.team == team) {
-                            val moves = piece.possibleMoves(gameState, listOf(i, j), lastMove)
-                            for (x in moves.indices) {
-                                allPossibleMoves.add(moves[x])
-                            }
+                    if (board[i][j].piece.value!!.team == team) {
+                        val moves = piece.possibleMoves(gameState, listOf(i, j), updateLastMove())
+                        for (x in moves.indices) {
+                            allPossibleMoves.add(moves[x])
                         }
+                    }
                 }
             }
         }
@@ -178,6 +171,9 @@ class Game {
     private fun movePiece(move: Move){
         //piece moved
         val pieceMoved = board[move.oldPosition[0]][move.oldPosition[1]].piece.value
+        if (pieceMoved == null){
+            print("error")
+        }
         board[move.oldPosition[0]][move.oldPosition[1]].changePiece(null)
 
         //removeDestroyedPiece
@@ -192,6 +188,17 @@ class Game {
         pieceMoved!!.incrementMoveCounter()
     }
 
+
+    fun updateLastMove(): Move? {
+        if (movesPerformed.isEmpty()) {
+            lastMove = null
+        }
+        else {
+            lastMove = movesPerformed[movesPerformed.size-1]
+        }
+        return lastMove
+    }
+
     //moves a piece if possible, sets last move, and resolves special moves logic
     fun resolveMove(move: Move){
 
@@ -199,6 +206,8 @@ class Game {
         if (move.specialMove == "en passant"  ){
             //nothing new happens
         }
+
+
         else if (move.specialMove == "promotion"){
             var movedPiece = board[move.newPosition[0]][move.newPosition[1]].piece.value!!
             val pawnMoveCounter = movedPiece.moveCounter
@@ -210,6 +219,7 @@ class Game {
             }
             movedPiece  = newQueen
             board[move.newPosition[0]][move.newPosition[1]].changePiece(movedPiece)
+
         }
 
         else if (move.specialMove == "castling"){
@@ -224,6 +234,9 @@ class Game {
             }
         }
         movesPerformed.add(move)
+        if (board[3][1].piece.value == null){
+            print ("error")
+        }
     }
 
     fun undoMove(){

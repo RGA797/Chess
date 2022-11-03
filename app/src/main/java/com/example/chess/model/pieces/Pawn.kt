@@ -1,5 +1,6 @@
 package com.example.chess.model.pieces
 
+import android.util.Log
 import com.example.chess.model.Block
 import com.example.chess.model.Move
 import java.lang.NullPointerException
@@ -92,7 +93,9 @@ class Pawn(team: String) : Piece(team) {
                     //if they doubled left to piece
                     if (lastMove.newPosition[0] == piecePosition[0] && piecePosition[1] == (lastMove.newPosition[1]+1)) {
                             //take to the left (differs for teams)
-                            if (currentBlock.piece.value!!.team == "black" && gameState[lastMove.newPosition[0]][lastMove.newPosition[1]].piece.value!!.team == "white") {
+                        val pieceOne = currentBlock.piece.value?.team
+                        val pieceTwo = gameState[lastMove.newPosition[0]][lastMove.newPosition[1]].piece.value?.team
+                            if (pieceOne  == "black" && pieceTwo == "white") {
                                 moveList.add(
                                     Move(
                                         piecePosition,
@@ -118,9 +121,9 @@ class Pawn(team: String) : Piece(team) {
                     }
                 }
             }
-        catch (e: IndexOutOfBoundsException){
-        }
+        catch (e: NullPointerException){
 
+        }
 
         //en passant check
         try {
@@ -156,7 +159,7 @@ class Pawn(team: String) : Piece(team) {
                 }
         }
         catch (e: NullPointerException){
-            print ("wtf")
+
         }
 
     }
