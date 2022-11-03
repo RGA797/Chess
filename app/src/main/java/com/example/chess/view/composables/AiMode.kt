@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import com.example.chess.model.*
+import com.example.chess.model.pieces.*
 import com.example.chess.viewModel.Game
 import com.example.chess.viewModel.UiRemembrance
 
@@ -62,7 +63,6 @@ fun AiBoard(game: Game, uiRemembrance: UiRemembrance) {
                             x++
                         }
                     }
-
                 }
             }
         }
@@ -73,9 +73,9 @@ fun AiBoard(game: Game, uiRemembrance: UiRemembrance) {
 @Composable
 fun AiBlock(isBlack: Boolean, gameObject: Game, position: List<Int>, uiRemembrance: UiRemembrance){
     val block = remember { gameObject.board[position[0]][position[1]] }
-    var firstClick = remember {uiRemembrance.firstClick}
-    var lastClickPosition = remember {uiRemembrance.lastClickPosition}
-    var possibleMoves = remember {uiRemembrance.possibleMoves}
+    val firstClick = remember {uiRemembrance.firstClick}
+    val lastClickPosition = remember {uiRemembrance.lastClickPosition}
+    val possibleMoves = remember {uiRemembrance.possibleMoves}
     val blockColor = remember{ mutableStateOf(Color.White) }
     if (isBlack){
         blockColor.value = Color.Gray

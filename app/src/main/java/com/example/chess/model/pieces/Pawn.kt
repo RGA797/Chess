@@ -1,10 +1,14 @@
-package com.example.chess.model
+package com.example.chess.model.pieces
+
+import com.example.chess.model.Block
+import com.example.chess.model.Move
+import java.lang.NullPointerException
 
 class Pawn(team: String) : Piece(team) {
     private var moveList: MutableList<Move> = mutableListOf()
-    private fun checkMoves(gameState: List<List<Block>>, piecePosition: List<Int>,lastMove: Move?){
+    private fun checkMoves(gameState: List<List<Block>>, piecePosition: List<Int>, lastMove: Move?){
         val currentBlock = gameState[piecePosition[0]][piecePosition[1]]
-        var moveIncrement: Int = 0
+        var moveIncrement = 0
         //as pawn moves differ depending on teams we need to depend on that
         if (currentBlock.piece.value!!.team == "white"){
             moveIncrement = 1
@@ -151,7 +155,8 @@ class Pawn(team: String) : Piece(team) {
                     }
                 }
         }
-        catch (e: IndexOutOfBoundsException){
+        catch (e: NullPointerException){
+            print ("wtf")
         }
 
     }

@@ -1,6 +1,9 @@
-package com.example.chess.model
+package com.example.chess.model.pieces
 
-class Rook(team: String) : Piece(team) {
+import com.example.chess.model.Block
+import com.example.chess.model.Move
+
+class Queen(team: String) : Piece(team) {
     var moveList: MutableList<Move> = mutableListOf()
     //returns a list of all possible moves
     private fun checkMoves(xOffset: Int, yOffset:Int, gameState: List<List<Block>>, piecePosition: List<Int>){
@@ -32,11 +35,19 @@ class Rook(team: String) : Piece(team) {
         lastMove: Move?
     ): MutableList<Move> {
         moveList.clear()
+        //diagonal moves
+        checkMoves(1,1, gameState, piecePosition)
+        checkMoves(1,-1, gameState, piecePosition)
+        checkMoves(-1,1, gameState, piecePosition)
+        checkMoves(-1,-1, gameState, piecePosition)
+
+        //lined moves
         checkMoves(1,0, gameState, piecePosition)
         checkMoves(-1,0, gameState, piecePosition)
         checkMoves(0,1, gameState, piecePosition)
         checkMoves(0,-1, gameState, piecePosition)
-        return moveList
 
+        return moveList
     }
+
 }

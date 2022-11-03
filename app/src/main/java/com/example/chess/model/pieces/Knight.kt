@@ -1,4 +1,7 @@
-package com.example.chess.model
+package com.example.chess.model.pieces
+
+import com.example.chess.model.Block
+import com.example.chess.model.Move
 
 class Knight(team: String) : Piece(team) {
     var moveList: MutableList<Move> = mutableListOf()

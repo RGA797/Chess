@@ -63,21 +63,12 @@ class ExampleUnitTest {
         val game = Game()
 
         //this little test shows that min prefers moves that actually put them ahead in point
-        game.resolveMove(Move(listOf(1,0), listOf(3,0), false, null,"double" ))
-        game.resolveMove(Move(listOf(3,0), listOf(4,0), false, null,null ))
-        game.resolveMove(Move(listOf(4,0), listOf(5,0), false, null,null ))
-
         // depth 6 time: 942239 milis - 4.8 minutes!
+        //depth  4 time: 18822 milis - 0.3 minutes!
         val elapsed = measureTimeMillis {
             game.min(-10000000,1000000, 6)
         }
         print(elapsed)
     }
 
-    @Test
-    fun list(){
-       var list = mutableListOf<Int>(0,1,2,3,4)
-      list.add(5)
-        print(list)
-    }
 }

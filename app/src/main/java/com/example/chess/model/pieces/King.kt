@@ -1,6 +1,7 @@
-package com.example.chess.model
+package com.example.chess.model.pieces
 
-import com.example.chess.viewModel.Game
+import com.example.chess.model.Block
+import com.example.chess.model.Move
 
 class King(team: String) : Piece(team) {
     private var moveList: MutableList<Move?> = mutableListOf()
@@ -144,19 +145,11 @@ class King(team: String) : Piece(team) {
                                 }
                             }
                         }
-                    //cannot capture pieces that are protected, so we check for it
-                    for (x in moveList.indices) {
-                        if (moveList[x] != null) {
-                            if (moveList[x]!!.enemyDestroyed){
-
-                            }
-                        }
-                    }
                 }
             }
         }
         //removing null values
-        var cleanMoveList: MutableList<Move> = mutableListOf()
+        val cleanMoveList: MutableList<Move> = mutableListOf()
         for (i in moveList.indices){
             if (moveList[i] != null){
                 cleanMoveList.add(moveList[i]!!)

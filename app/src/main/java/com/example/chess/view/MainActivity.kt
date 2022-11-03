@@ -38,7 +38,6 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MyApp(content: @Composable () -> Unit) {
-    val game = Game()
     ChessTheme {
         // A surface container using the 'background' color from the theme
         Surface(
@@ -53,8 +52,6 @@ fun MyApp(content: @Composable () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    val game = Game()
-    val uiRemembrance = UiRemembrance()
     MyApp {
         Navigation()
         //Menu(game,uiRemembrance)

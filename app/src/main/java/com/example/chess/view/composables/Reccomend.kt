@@ -19,7 +19,7 @@ import com.example.chess.viewModel.UiRemembrance
 @Composable
 fun RecommendButton(gameObject: Game, uiRemembrance: UiRemembrance){
     Button(onClick = {
-        val move: Move = gameObject.min(-10000000,1000000, 4)[1] as Move
+        val move: Move = gameObject.min(-10000000,1000000, 6)[1] as Move
         uiRemembrance.changeRecommendedMove("" + move.oldPosition[0]+","+move.oldPosition[1] + " ->" + move.newPosition[0]+","+move.newPosition[1])}
         , modifier = Modifier
             .height(80.dp)

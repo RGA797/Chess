@@ -2,6 +2,7 @@ package com.example.chess.viewModel
 
 import androidx.compose.runtime.*
 import com.example.chess.model.*
+import com.example.chess.model.pieces.*
 
 class Game {
     var board: MutableList<MutableList<Block>> = mutableStateListOf()
@@ -137,7 +138,7 @@ class Game {
     }
 
     fun kingIsStuck(teamMoves:List<Move>, kingPosition: List<Int>): Boolean{
-        var kingHasMove: Boolean = false
+        var kingHasMove = false
         for (i in teamMoves.indices){
             if (teamMoves[i].oldPosition == kingPosition){
                 kingHasMove = true
@@ -378,7 +379,7 @@ class Game {
 
             // Alpha Beta Pruning
             if (beta <= alphaTemp)
-                break;
+                break
         }
         return listOf(maxValue, bestMove)
     }
@@ -416,7 +417,7 @@ class Game {
 
             // Alpha Beta Pruning
             if (betaTemp <= alpha)
-                break;
+                break
         }
         return listOf(minValue, bestMove)
     }

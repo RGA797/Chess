@@ -2,7 +2,7 @@ package com.example.chess.model
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import com.example.chess.model.pieces.*
 
 class Block (typeString: String?) {
     var piece: MutableState<Piece?> = mutableStateOf(null)
