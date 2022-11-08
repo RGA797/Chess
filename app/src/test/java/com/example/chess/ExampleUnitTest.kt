@@ -23,7 +23,7 @@ class ExampleUnitTest {
         game.resolveMove(Move(listOf(3,0), listOf(4,0), false, null,null ))
         game.resolveMove(Move(listOf(4,0), listOf(5,0), false, null,null ))
 
-        val move = game.min(-10000000,1000000, 3, LocalDateTime.now())
+        val move = game.min(-10000000,1000000, 3, System.currentTimeMillis())
          print(move)
     }
 
@@ -66,7 +66,7 @@ class ExampleUnitTest {
         // depth 6 time: 942239 milis - 4.8 minutes!
         //depth  4 time: 18822 milis - 0.3 minutes!
         val elapsed = measureTimeMillis {
-            game.min(-10000000,1000000, 6, LocalDateTime.now())
+            game.min(-10000000,1000000, 6, System.currentTimeMillis())
         }
         print(elapsed)
     }

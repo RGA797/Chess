@@ -7,6 +7,8 @@ import java.sql.Time
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.temporal.Temporal
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 class Game {
     var board: MutableList<MutableList<Block>> = mutableStateListOf()
@@ -352,12 +354,13 @@ class Game {
         return value
     }
 
-
-    fun max(alpha: Int, beta: Int, depth: Int,startTime: Temporal): List<Any?> {
+    fun max(alpha: Int, beta: Int, depth: Int,startTime: Long): List<Any?> {
         var maxValue = -1000000
         var bestMove: Move? = null
         //reached depth
-        if (depth == 0 || Duration.between(startTime, LocalDateTime.now()).toMinutes() > 0){
+        val duration = (System.currentTimeMillis() - startTime)/1000.0;
+
+        if (depth == 0 || duration >= 15){
             return listOf(evalGame(board), bestMove)
         }
 
@@ -384,18 +387,21 @@ class Game {
             undoMove()
 
             // Alpha Beta Pruning
-            if (beta <= alphaTemp)
+            if (beta <= alphaTemp || duration >= 15) {
                 break
+            }
         }
         return listOf(maxValue, bestMove)
     }
 
-    fun min(alpha: Int, beta: Int, depth: Int, startTime: Temporal): List<Any?> {
+    fun min(alpha: Int, beta: Int, depth: Int, startTime: Long): List<Any?> {
         var minValue = 1000000
         var bestMove: Move? = null
 
+        val duration = (System.currentTimeMillis() - startTime)/1000.0;
         //reached depth
-        if (depth == 0 || Duration.between(startTime, LocalDateTime.now()).toMinutes() > 0){
+
+        if (depth == 0 || duration  >= 15){
             return listOf(evalGame(board), bestMove)
         }
 
@@ -422,8 +428,9 @@ class Game {
             undoMove()
 
             // Alpha Beta Pruning
-            if (betaTemp <= alpha)
+            if (betaTemp <= alpha || duration >= 15) {
                 break
+            }
         }
         return listOf(minValue, bestMove)
     }

@@ -104,7 +104,7 @@ fun AiBlock(isBlack: Boolean, gameObject: Game, position: List<Int>, uiRemembran
                         if (possibleMoves[i].oldPosition[0] == lastClickPosition[0] && possibleMoves[i].oldPosition[1] == lastClickPosition[1]){
                             gameObject.resolveMove(possibleMoves[i])
                             uiRemembrance.changeFirstClick(!firstClick.value)
-                            gameObject.resolveMove(gameObject.max(-10000000,1000000, 4, LocalDateTime.now())[1] as Move)
+                            gameObject.resolveMove(gameObject.max(-10000000,1000000, 4, System.currentTimeMillis())[1] as Move)
                             break
                         }
                     }
