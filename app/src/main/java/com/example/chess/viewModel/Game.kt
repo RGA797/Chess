@@ -3,6 +3,10 @@ package com.example.chess.viewModel
 import androidx.compose.runtime.*
 import com.example.chess.model.*
 import com.example.chess.model.pieces.*
+import java.sql.Time
+import java.time.Duration
+import java.time.LocalDateTime
+import java.time.temporal.Temporal
 
 class Game {
     var board: MutableList<MutableList<Block>> = mutableStateListOf()
@@ -29,25 +33,26 @@ class Game {
 
     }
 
-    //returns every valid move for current gameState
-    fun getValidMoves(gameState: MutableList<MutableList<Block>>, team: String): List<Move> {
-        val lastMove: Move?
-
+    fun updatedLastMove(): Move?{
         if (movesPerformed.isEmpty()) {
-            lastMove = null
+            return  null
         }
         else {
-            lastMove = movesPerformed[movesPerformed.size-1]
+            return movesPerformed[movesPerformed.size-1]
         }
+    }
+
+    //returns every valid move for current gameState
+    fun getValidMoves(gameState: MutableList<MutableList<Block>>, team: String): List<Move> {
 
         val validMoves = mutableListOf<Move>()
-        val teamMoves = getPossibleMoves(team,gameState,lastMove)
+        val teamMoves = getPossibleMoves(team,gameState,updatedLastMove())
         var enemyMoves: List<Move> = listOf()
         if (team == "white"){
-            enemyMoves = getPossibleMoves("black",gameState,lastMove)
+            enemyMoves = getPossibleMoves("black",gameState,updatedLastMove())
         }
         if (team == "black"){
-            enemyMoves = getPossibleMoves("white",gameState,lastMove)
+            enemyMoves = getPossibleMoves("white",gameState,updatedLastMove())
         }
 
         if(kingIsMate(enemyMoves, getKingPosition(team, gameState)) ){
@@ -59,10 +64,10 @@ class Game {
                 if (teamMoves[i].oldPosition == getKingPosition(team, gameState)) {
                     resolveMove(teamMoves[i])
                     if (team == "white"){
-                        enemyMoves = getPossibleMoves("black",gameState,lastMove)
+                        enemyMoves = getPossibleMoves("black",gameState,updatedLastMove())
                     }
                     if (team == "black"){
-                        enemyMoves = getPossibleMoves("white",gameState,lastMove)
+                        enemyMoves = getPossibleMoves("white",gameState,updatedLastMove())
                     }
                     if (kingIsCheck(enemyMoves, getKingPosition(team, gameState))) {
                         undoMove()
@@ -79,10 +84,10 @@ class Game {
             for (i in teamMoves.indices){
                     resolveMove(teamMoves[i])
                     if (team == "white"){
-                        enemyMoves = getPossibleMoves("black",gameState,lastMove)
+                        enemyMoves = getPossibleMoves("black",gameState,updatedLastMove())
                     }
                     if (team == "black"){
-                        enemyMoves = getPossibleMoves("white",gameState,lastMove)
+                        enemyMoves = getPossibleMoves("white",gameState,updatedLastMove())
                     }
                     if (kingIsCheck(enemyMoves, getKingPosition(team, gameState))){
                         undoMove()
@@ -163,7 +168,7 @@ class Game {
                 val piece = board[i][j].piece.value
                 if (piece != null) {
                         if (board[i][j].piece.value!!.team == team) {
-                            val moves = piece.possibleMoves(gameState, listOf(i, j), lastMove)
+                            val moves = piece.possibleMoves(gameState, listOf(i, j), lastMove )
                             for (x in moves.indices) {
                                 allPossibleMoves.add(moves[x])
                             }
@@ -347,11 +352,12 @@ class Game {
         return value
     }
 
-    fun max(alpha: Int, beta: Int, depth: Int, ): List<Any?> {
+
+    fun max(alpha: Int, beta: Int, depth: Int,startTime: Temporal): List<Any?> {
         var maxValue = -1000000
         var bestMove: Move? = null
         //reached depth
-        if (depth == 0){
+        if (depth == 0 || Duration.between(startTime, LocalDateTime.now()).toMinutes() > 0){
             return listOf(evalGame(board), bestMove)
         }
 
@@ -362,7 +368,7 @@ class Game {
 
         for (i in moveList.indices){
             resolveMove(moveList[i])
-            val nodeResult = min(alphaTemp, beta, depth-1)
+            val nodeResult = min(alphaTemp, beta, depth-1, startTime)
             val nodeValue = nodeResult[0] as Int
 
             if (nodeValue > maxValue) {
@@ -384,12 +390,12 @@ class Game {
         return listOf(maxValue, bestMove)
     }
 
-    fun min(alpha: Int, beta: Int, depth: Int): List<Any?> {
+    fun min(alpha: Int, beta: Int, depth: Int, startTime: Temporal): List<Any?> {
         var minValue = 1000000
         var bestMove: Move? = null
 
         //reached depth
-        if (depth == 0){
+        if (depth == 0 || Duration.between(startTime, LocalDateTime.now()).toMinutes() > 0){
             return listOf(evalGame(board), bestMove)
         }
 
@@ -400,7 +406,7 @@ class Game {
 
         for (i in moveList.indices){
             resolveMove(moveList[i])
-            val nodeResult = max(alpha, betaTemp, depth-1)
+            val nodeResult = max(alpha, betaTemp, depth-1, startTime)
             val nodeValue = nodeResult[0] as Int
 
             if (nodeValue < minValue) {
