@@ -5,7 +5,6 @@ import com.example.chess.model.*
 import com.example.chess.model.pieces.*
 
 class Game {
-    var lastMove: Move? = null
     var board: MutableList<MutableList<Block>> = mutableListOf()
     var movesPerformed: MutableList<Move> = mutableListOf()
     private var destroyedQueue: MutableList<Piece> = mutableListOf()
@@ -191,12 +190,11 @@ class Game {
 
     fun updateLastMove(): Move? {
         if (movesPerformed.isEmpty()) {
-            lastMove = null
+            return null
         }
         else {
-            lastMove = movesPerformed[movesPerformed.size-1]
+            return movesPerformed[movesPerformed.size-1]
         }
-        return lastMove
     }
 
     //moves a piece if possible, sets last move, and resolves special moves logic
