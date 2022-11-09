@@ -358,8 +358,7 @@ class Game {
         var maxValue = -1000000
         var bestMove: Move? = null
         //reached depth
-        val duration = (System.currentTimeMillis() - startTime)/1000.0;
-
+        var duration = (System.currentTimeMillis() - startTime)/1000.0;
         if (depth == 0 || duration >= 15){
             return listOf(evalGame(board), bestMove)
         }
@@ -370,25 +369,29 @@ class Game {
         var alphaTemp = alpha
 
         for (i in moveList.indices){
-            resolveMove(moveList[i])
-            val nodeResult = min(alphaTemp, beta, depth-1, startTime)
-            val nodeValue = nodeResult[0] as Int
+            duration = (System.currentTimeMillis() - startTime)/1000.0
+            if (duration < 15){
+                resolveMove(moveList[i])
+                val nodeResult = min(alphaTemp, beta, depth-1, startTime)
+                val nodeValue = nodeResult[0] as Int
 
-            if (nodeValue > maxValue) {
-                maxValue = nodeValue
-                bestMove = moveList[i]
-            }
+                if (nodeValue > maxValue) {
+                    maxValue = nodeValue
+                    bestMove = moveList[i]
+                }
 
-            if (maxValue >alphaTemp){
-                alphaTemp = maxValue
-            }
+                if (maxValue >alphaTemp){
+                    alphaTemp = maxValue
+                }
 
-            //reset board
-            undoMove()
+                //reset board
+                undoMove()
 
-            // Alpha Beta Pruning
-            if (beta <= alphaTemp || duration >= 15) {
-                break
+                // Alpha Beta Pruning
+                duration = (System.currentTimeMillis() - startTime)/1000.0
+                if (beta <= alphaTemp || duration >= 15) {
+                    break
+                }
             }
         }
         return listOf(maxValue, bestMove)
@@ -398,7 +401,7 @@ class Game {
         var minValue = 1000000
         var bestMove: Move? = null
 
-        val duration = (System.currentTimeMillis() - startTime)/1000.0;
+        var duration = (System.currentTimeMillis() - startTime)/1000.0;
         //reached depth
 
         if (depth == 0 || duration  >= 15){
@@ -410,26 +413,31 @@ class Game {
         val moveList = getValidMoves(board,"white")
         var betaTemp = beta
 
+
         for (i in moveList.indices){
-            resolveMove(moveList[i])
-            val nodeResult = max(alpha, betaTemp, depth-1, startTime)
-            val nodeValue = nodeResult[0] as Int
+            duration = (System.currentTimeMillis() - startTime)/1000.0
+            if (duration < 15){
+                resolveMove(moveList[i])
+                val nodeResult = max(alpha, betaTemp, depth-1, startTime)
+                val nodeValue = nodeResult[0] as Int
 
-            if (nodeValue < minValue) {
-                minValue = nodeValue
-                bestMove = moveList[i]
-            }
+                if (nodeValue < minValue) {
+                    minValue = nodeValue
+                    bestMove = moveList[i]
+                }
 
-            if (betaTemp > minValue){
-                betaTemp = minValue
-            }
+                if (betaTemp > minValue){
+                    betaTemp = minValue
+                }
 
-            //reset board
-            undoMove()
+                //reset board
+                undoMove()
 
-            // Alpha Beta Pruning
-            if (betaTemp <= alpha || duration >= 15) {
-                break
+                // Alpha Beta Pruning
+                duration = (System.currentTimeMillis() - startTime)/1000.0
+                if (betaTemp <= alpha || duration >= 15) {
+                    break
+                }
             }
         }
         return listOf(minValue, bestMove)
