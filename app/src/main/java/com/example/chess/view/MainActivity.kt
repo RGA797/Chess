@@ -29,8 +29,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MyApp(){
-               // Greeting(name = "Android")
+            MyApp {
+                Navigation()
             }
         }
     }
@@ -48,6 +48,7 @@ fun MyApp(content: @Composable () -> Unit) {
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
