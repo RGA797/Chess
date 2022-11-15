@@ -14,6 +14,7 @@ class Game {
     var board: MutableList<MutableList<Block>> = mutableStateListOf()
     var movesPerformed: MutableList<Move> = mutableStateListOf()
     private var destroyedQueue: MutableList<Piece> = mutableStateListOf()
+    //initializing the board
     init {
         for (i in 0..7)
             if (i == 0 ){
@@ -286,12 +287,41 @@ class Game {
     //returns the value of a game (this is the heuristics for our algorithm)
     fun evalGame(gameState: MutableList<MutableList<Block>>): Int{
         var value = 0
+        var number = 0
         for(i in gameState.indices){
             for (j in gameState[i].indices){
                 if (gameState[i][j].piece.value != null){
                     if (gameState[i][j].piece.value!!.team == "black"){
-                        if (gameState[i][j].piece.value is King){
-                            val enemyMoves = getValidMoves(board, "white")
+//                        if (gameState[i][j].piece.value is King){
+//                            val enemyMoves = getValidMoves(board, "white")
+//                            if (kingIsMate(enemyMoves, listOf(i,j))){
+//                                value -= 100000
+//                            }
+//                            else if (kingIsCheck(enemyMoves, listOf(i,j)) ){
+//                                value -= 500000
+//                            }
+//                            else {
+//                                value += 10000
+//                            }
+//                        }
+//                        if (gameState[i][j].piece.value is Queen){
+//                            value += 900
+//                        }
+//                        if (gameState[i][j].piece.value is Rook){
+//                            value += 500
+//                        }
+//                        if (gameState[i][j].piece.value is Bishop){
+//                            value += 300
+//                        }
+//                        if (gameState[i][j].piece.value is Knight){
+//                            value += 300
+//                        }
+//                        if (gameState[i][j].piece.value is Pawn){
+//                            value += 300
+//                        }
+
+                    when (gameState[i][j].piece.value) {
+                        is King -> {val enemyMoves = getValidMoves(board, "white")
                             if (kingIsMate(enemyMoves, listOf(i,j))){
                                 value -= 100000
                             }
@@ -302,22 +332,24 @@ class Game {
                                 value += 10000
                             }
                         }
-                        if (gameState[i][j].piece.value is Queen){
-                            value += 900
-                        }
-                        if (gameState[i][j].piece.value is Rook){
-                            value += 500
-                        }
-                        if (gameState[i][j].piece.value is Bishop){
-                            value += 300
-                        }
-                        if (gameState[i][j].piece.value is Knight){
-                            value += 300
-                        }
-                        if (gameState[i][j].piece.value is Pawn){
-                            value += 300
+                        is Queen -> value += 900
+                        is Rook -> value += 500
+                        is Bishop -> value += 300
+                        is Knight -> value += 300
+                        is Pawn -> {value += 300 ; println("Is pawn lol") ; number += 1; println(number) ; println("lmao")}
+                    }
+                    }
+
+                    /*
+                    when (x) {
+                        1 -> print("x == 1")
+                        2 -> print("x == 2")
+
+                            else -> {
+                            print("x is neither 1 nor 2")
                         }
                     }
+                     */
 
                     if (gameState[i][j].piece.value!!.team == "white"){
                         if (gameState[i][j].piece.value is King){
