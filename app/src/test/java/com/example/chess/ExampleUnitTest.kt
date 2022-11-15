@@ -5,6 +5,7 @@ import com.example.chess.viewModel.Game
 import org.junit.Test
 
 import org.junit.Assert.*
+import java.time.LocalDateTime
 import kotlin.system.measureTimeMillis
 
 /**
@@ -22,7 +23,7 @@ class ExampleUnitTest {
         game.resolveMove(Move(listOf(3,0), listOf(4,0), false, null,null ))
         game.resolveMove(Move(listOf(4,0), listOf(5,0), false, null,null ))
 
-        val move = game.min(-10000000,1000000, 3)
+        val move = game.min(-10000000,1000000, 3, System.currentTimeMillis())
          print(move)
     }
 
@@ -63,7 +64,7 @@ class ExampleUnitTest {
         val game = Game()
         //this little test shows that min prefers moves that actually put them ahead in point
         val elapsed = measureTimeMillis {
-            game.min(-10000000,1000000, 6)
+            game.min(-10000000,1000000, 6, System.currentTimeMillis())
         }
         print(elapsed)
     }
