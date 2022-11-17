@@ -10,7 +10,7 @@ import com.example.chess.viewModel.UiRemembrance
 @Composable
 fun Navigation(){
     val navController = rememberNavController()
-    val game = Game()
+    val game = Game
     val ui = UiRemembrance()
     NavHost(navController = navController, startDestination = Screens.Menu.route){
         composable(Screens.Menu.route){
