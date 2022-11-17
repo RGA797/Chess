@@ -23,7 +23,7 @@ fun AiMode(gameObject: Game, uiRemembrance: UiRemembrance){
     Column() {
         AiBoard(gameObject, uiRemembrance)
         DoubleUndoButton(gameObject = gameObject)
-        RecommendButton(gameObject = EvalFun(), uiRemembrance = uiRemembrance )
+        RecommendButton(gameObject = EvalFun, uiRemembrance = uiRemembrance )
         RecommendDisplay(uiRemembrance = uiRemembrance)
     }
 }
@@ -54,7 +54,7 @@ fun AiBoard(gameObject: Game, uiRemembrance: UiRemembrance ) {
                 Row(modifier = Modifier.fillMaxWidth()) {
                     for (j in 0..7) {
                         if (x %2 == 0) {
-                            AiBlock(true, gameObject, listOf(i, j),uiRemembrance, maxVal)
+                            AiBlock(true, gameObject, listOf(i, j),uiRemembrance)
                         }
                         else{
                             AiBlock(false, gameObject, listOf(i, j),uiRemembrance)
@@ -72,7 +72,7 @@ fun AiBoard(gameObject: Game, uiRemembrance: UiRemembrance ) {
 
 
 @Composable
-fun AiBlock(isBlack: Boolean, gameObject: Game, position: List<Int>, uiRemembrance: UiRemembrance, evalFun: EvalFun){
+fun AiBlock(isBlack: Boolean, gameObject: Game, position: List<Int>, uiRemembrance: UiRemembrance){
     val block = remember { Game.board[position[0]][position[1]] }
     val firstClick = remember {uiRemembrance.firstClick}
     val lastClickPosition = remember {uiRemembrance.lastClickPosition}
@@ -104,7 +104,7 @@ fun AiBlock(isBlack: Boolean, gameObject: Game, position: List<Int>, uiRemembran
                         if (possibleMoves[i].oldPosition[0] == lastClickPosition[0] && possibleMoves[i].oldPosition[1] == lastClickPosition[1]){
                             Game.resolveMove(possibleMoves[i])
                             uiRemembrance.changeFirstClick(!firstClick.value)
-                            Game.resolveMove(evalFun.maxVal(-10000000,1000000, 4, System.currentTimeMillis())[1] as Move)
+                            Game.resolveMove(EvalFun.maxVal(-10000000,1000000, 4, System.currentTimeMillis())[1] as Move)
                             break
                         }
                     }

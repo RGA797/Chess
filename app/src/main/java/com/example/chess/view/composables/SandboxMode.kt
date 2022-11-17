@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import com.example.chess.model.pieces.*
+import com.example.chess.viewModel.EvalFun
 import com.example.chess.viewModel.Game
 import com.example.chess.viewModel.UiRemembrance
 
@@ -21,7 +22,7 @@ fun SandboxMode(game: Game, uiRemembrance: UiRemembrance){
     Column() {
         SandboxBoard(game, uiRemembrance)
         UndoButton(gameObject = game)
-        RecommendButton(gameObject = game, uiRemembrance = uiRemembrance )
+        RecommendButton(gameObject = EvalFun, uiRemembrance = uiRemembrance )
         RecommendDisplay(uiRemembrance = uiRemembrance)
     }
 }

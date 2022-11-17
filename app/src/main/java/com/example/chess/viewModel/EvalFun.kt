@@ -9,9 +9,10 @@ import com.example.chess.viewModel.Game.kingIsMate
 import com.example.chess.viewModel.Game.resolveMove
 import com.example.chess.viewModel.Game.undoMove
 
-class EvalFun() {
+object EvalFun {
 
     /**
+     * Center:
      * gameState[3][3]
      * gameState[3][4]
      * gameState[4][3]
@@ -21,7 +22,6 @@ class EvalFun() {
     //returns the value of a game (this is the heuristics for our algorithm)
     fun heuristics(gameState: MutableList<MutableList<Block>>): Int {
         var value = 0
-        var number = 0
         for (i in gameState.indices) {
             for (j in gameState[i].indices) {
                 if (gameState[i][j].piece.value != null) {
@@ -41,11 +41,8 @@ class EvalFun() {
                             is Rook -> value += 500
                             is Bishop -> value += 300
                             is Knight -> value += 300
-                            is Pawn -> {
-                                value += 300; println("Is pawn lol"); number += 1; println(number); println(
-                                    "lmao"
-                                )
-                            }
+                            is Pawn ->  value += 300
+
                         }
                     }
 

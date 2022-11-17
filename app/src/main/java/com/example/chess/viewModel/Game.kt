@@ -7,6 +7,8 @@ import com.example.chess.model.pieces.*
 object Game {
 
 
+        
+
 
     var board: MutableList<MutableList<Block>> = mutableStateListOf()
     var movesPerformed: MutableList<Move> = mutableStateListOf()
@@ -29,9 +31,9 @@ object Game {
             else{
                 board.add(mutableListOf<Block>(Block(null), Block(null),Block(null),Block(null),Block(null),Block(null),Block(null),Block(null)))
             }
-        var arr = arrayOf(intArrayOf(1, 2, 3), intArrayOf(4, 5, 6), intArrayOf(7, 8, 9))
-        println("Something happens here " + arr)
+        
 
+        //var arr = arrayOf(intArrayOf(1, 2, 3), intArrayOf(4, 5, 6), intArrayOf(7, 8, 9))
     }
 
     fun updatedLastMove(): Move?{
