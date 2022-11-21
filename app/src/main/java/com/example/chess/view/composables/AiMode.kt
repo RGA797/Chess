@@ -20,6 +20,7 @@ import com.example.chess.viewModel.UiViewModel
 @Composable
 fun AiMode(game: Game, uiViewModel: UiViewModel){
     Column() {
+        Text("VS AI")
         AiBoard(game, uiViewModel)
         DoubleUndoButton(gameObject = game)
         RecommendButton(gameObject = game, uiViewModel = uiViewModel )

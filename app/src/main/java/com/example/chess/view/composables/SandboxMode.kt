@@ -19,6 +19,7 @@ import com.example.chess.viewModel.UiViewModel
 @Composable
 fun SandboxMode(game: Game, uiViewModel: UiViewModel){
     Column() {
+        Text("Sandbox mode")
         SandboxBoard(game, uiViewModel)
         UndoButton(gameObject = game)
         RecommendButton(gameObject = game, uiViewModel = uiViewModel )

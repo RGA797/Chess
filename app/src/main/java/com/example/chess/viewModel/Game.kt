@@ -7,6 +7,7 @@ import com.example.chess.model.Move
 import com.example.chess.model.pieces.*
 
 class Game {
+
     var board: MutableList<MutableList<Block>> = mutableStateListOf()
     var movesPerformed: MutableList<Move> = mutableStateListOf()
     private var destroyedQueue: MutableList<Piece> = mutableStateListOf()
@@ -357,7 +358,7 @@ class Game {
         //reached depth
         var duration = (System.currentTimeMillis() - startTime)/1000.0
         if (depth == 0 || duration >= 15){
-            return listOf(evalGame(board), bestMove)
+            return listOf(evalGame(board), null)
         }
 
         //we go through every possible branch from the current node, then find the min,value
@@ -402,7 +403,7 @@ class Game {
         //reached depth
 
         if (depth == 0 || duration  >= 15){
-            return listOf(evalGame(board), bestMove)
+            return listOf(evalGame(board), null)
         }
 
         //we go through every possible branch from the current node, then find the min,value
