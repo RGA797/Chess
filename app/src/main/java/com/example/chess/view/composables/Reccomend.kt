@@ -14,18 +14,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.chess.model.Move
 import com.example.chess.viewModel.Game
-import com.example.chess.viewModel.UiRemembrance
-import java.time.LocalDateTime
+import com.example.chess.viewModel.UiViewModel
 
 @Composable
-fun RecommendButton(gameObject: Game, uiRemembrance: UiRemembrance){
+fun RecommendButton(gameObject: Game, uiViewModel: UiViewModel){
     Button(onClick = {
         val move: Move? = gameObject.min(-10000000,1000000, 4, System.currentTimeMillis())[1] as Move?
         if (move != null){
-            uiRemembrance.changeRecommendedMove("" + move.oldPosition[0]+","+move.oldPosition[1] + " ->" + move.newPosition[0]+","+move.newPosition[1])
+            uiViewModel.changeRecommendedMove("" + move.oldPosition[0]+","+move.oldPosition[1] + " ->" + move.newPosition[0]+","+move.newPosition[1])
         }
         else{
-            uiRemembrance.changeRecommendedMove("No possible moves!")
+            uiViewModel.changeRecommendedMove("No possible moves!")
         }
                      }
         , modifier = Modifier
@@ -42,8 +41,8 @@ fun RecommendButton(gameObject: Game, uiRemembrance: UiRemembrance){
 }
 
 @Composable
-fun RecommendDisplay(uiRemembrance: UiRemembrance){
-    val textToShow = remember {uiRemembrance.recommendedMove}
+fun RecommendDisplay(uiViewModel: UiViewModel){
+    val textToShow = remember {uiViewModel.uiModel.recommendedMove}
     Text(
         text = textToShow.value,
         modifier = Modifier.padding(bottom = 1.dp),

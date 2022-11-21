@@ -15,16 +15,15 @@ import androidx.compose.ui.unit.dp
 import com.example.chess.model.*
 import com.example.chess.model.pieces.*
 import com.example.chess.viewModel.Game
-import com.example.chess.viewModel.UiRemembrance
-import java.time.LocalDateTime
+import com.example.chess.viewModel.UiViewModel
 
 @Composable
-fun AiMode(game: Game, uiRemembrance: UiRemembrance){
+fun AiMode(game: Game, uiViewModel: UiViewModel){
     Column() {
-        AiBoard(game, uiRemembrance)
+        AiBoard(game, uiViewModel)
         DoubleUndoButton(gameObject = game)
-        RecommendButton(gameObject = game, uiRemembrance = uiRemembrance )
-        RecommendDisplay(uiRemembrance = uiRemembrance)
+        RecommendButton(gameObject = game, uiViewModel = uiViewModel )
+        RecommendDisplay(uiViewModel = uiViewModel)
     }
 }
 @Composable
@@ -46,7 +45,7 @@ fun DoubleUndoButton(gameObject: Game){
     }
 }
 @Composable
-fun AiBoard(game: Game, uiRemembrance: UiRemembrance) {
+fun AiBoard(game: Game, uiViewModel: UiViewModel) {
     Box() {
         Column() {
             var x = 1
@@ -54,10 +53,10 @@ fun AiBoard(game: Game, uiRemembrance: UiRemembrance) {
                 Row(modifier = Modifier.fillMaxWidth()) {
                     for (j in 0..7) {
                         if (x %2 == 0) {
-                            AiBlock(true, game, listOf(i, j),uiRemembrance)
+                            AiBlock(true, game, listOf(i, j),uiViewModel)
                         }
                         else{
-                            AiBlock(false, game, listOf(i, j),uiRemembrance)
+                            AiBlock(false, game, listOf(i, j),uiViewModel)
                         }
                         x++
                         if (j == 7){
@@ -72,11 +71,11 @@ fun AiBoard(game: Game, uiRemembrance: UiRemembrance) {
 
 
 @Composable
-fun AiBlock(isBlack: Boolean, gameObject: Game, position: List<Int>, uiRemembrance: UiRemembrance){
+fun AiBlock(isBlack: Boolean, gameObject: Game, position: List<Int>, uiViewModel: UiViewModel){
     val block = remember { gameObject.board[position[0]][position[1]] }
-    val firstClick = remember {uiRemembrance.firstClick}
-    val lastClickPosition = remember {uiRemembrance.lastClickPosition}
-    val possibleMoves = remember {uiRemembrance.possibleMoves}
+    val firstClick = remember {uiViewModel.uiModel.firstClick}
+    val lastClickPosition = remember {uiViewModel.uiModel.lastClickPosition}
+    val possibleMoves = remember {uiViewModel.uiModel.possibleMoves}
     val blockColor = remember{ mutableStateOf(Color.White) }
     if (isBlack){
         blockColor.value = Color.Gray
@@ -86,9 +85,9 @@ fun AiBlock(isBlack: Boolean, gameObject: Game, position: List<Int>, uiRemembran
         if (firstClick.value){
             if (block.piece.value != null) {
                 if (block.piece.value!!.team == "white") {
-                    uiRemembrance.changeLastClickPosition(position)
-                    uiRemembrance.changeFirstClick(!firstClick.value)
-                    uiRemembrance.changepossibleMoves(
+                    uiViewModel.changeLastClickPosition(position)
+                    uiViewModel.changeFirstClick(!firstClick.value)
+                    uiViewModel.changepossibleMoves(
                         gameObject.getValidMoves(
                             gameObject.board,
                             block.piece.value!!.team
@@ -103,18 +102,18 @@ fun AiBlock(isBlack: Boolean, gameObject: Game, position: List<Int>, uiRemembran
                     if (possibleMoves[i].newPosition[0] == position[0] && possibleMoves[i].newPosition[1] == position[1]) {
                         if (possibleMoves[i].oldPosition[0] == lastClickPosition[0] && possibleMoves[i].oldPosition[1] == lastClickPosition[1]){
                             gameObject.resolveMove(possibleMoves[i])
-                            uiRemembrance.changeFirstClick(!firstClick.value)
+                            uiViewModel.changeFirstClick(!firstClick.value)
                             gameObject.resolveMove(gameObject.max(-10000000,1000000, 4, System.currentTimeMillis())[1] as Move)
                             break
                         }
                     }
                 }
                 if (block.piece.value == null){
-                    uiRemembrance.changeFirstClick(!firstClick.value)
+                    uiViewModel.changeFirstClick(!firstClick.value)
                 }
             }
             else{
-                uiRemembrance.changeFirstClick(!firstClick.value)
+                uiViewModel.changeFirstClick(!firstClick.value)
             }
         }
     } ,modifier = Modifier

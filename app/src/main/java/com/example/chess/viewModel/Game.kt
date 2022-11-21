@@ -1,35 +1,32 @@
 package com.example.chess.viewModel
 
-import androidx.compose.runtime.*
-import com.example.chess.model.*
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import com.example.chess.model.Block
+import com.example.chess.model.Move
 import com.example.chess.model.pieces.*
-import java.sql.Time
-import java.time.Duration
-import java.time.LocalDateTime
-import java.time.temporal.Temporal
-import java.util.*
-import java.util.concurrent.TimeUnit
 
 class Game {
     var board: MutableList<MutableList<Block>> = mutableStateListOf()
     var movesPerformed: MutableList<Move> = mutableStateListOf()
     private var destroyedQueue: MutableList<Piece> = mutableStateListOf()
     init {
+        //upon initialization of a game object, we inject pieces into lists of blocks with manual dependency injection
         for (i in 0..7)
             if (i == 0 ){
-                board.add(mutableListOf<Block>(Block("white rook"),Block("white knight"),Block("white bishop"),Block("white queen"),Block("white king"),Block("white bishop"),Block("white knight"),Block("white rook")))
+                board.add(mutableListOf<Block>(Block(mutableStateOf(Rook("white"))),Block(mutableStateOf(Knight("white"))),Block(mutableStateOf(Bishop("white"))),Block(mutableStateOf(Queen("white"))),Block(mutableStateOf(King("white"))),Block(mutableStateOf(Bishop("white"))),Block(mutableStateOf(Knight("white"))),Block(mutableStateOf(Rook("white"))) ))
             }
             else if (i == 1){
-                board.add(mutableListOf<Block>(Block("white pawn"),Block("white pawn"),Block("white pawn"),Block("white pawn"),Block("white pawn"),Block("white pawn"),Block("white pawn"),Block("white pawn")))
+                board.add(mutableListOf<Block>(Block(mutableStateOf(Pawn("white"))),Block(mutableStateOf(Pawn("white"))),Block(mutableStateOf(Pawn("white"))),Block(mutableStateOf(Pawn("white"))),Block(mutableStateOf(Pawn("white"))),Block(mutableStateOf(Pawn("white"))),Block(mutableStateOf(Pawn("white"))),Block(mutableStateOf(Pawn("white"))) ))
             }
             else if (i == 6){
-                board.add(mutableListOf<Block>(Block("black pawn"),Block("black pawn"),Block("black pawn"),Block("black pawn"),Block("black pawn"),Block("black pawn"),Block("black pawn"),Block("black pawn"),))
+                board.add(mutableListOf<Block>(Block(mutableStateOf(Pawn("black"))),Block(mutableStateOf(Pawn("black"))),Block(mutableStateOf(Pawn("black"))),Block(mutableStateOf(Pawn("black"))),Block(mutableStateOf(Pawn("black"))),Block(mutableStateOf(Pawn("black"))),Block(mutableStateOf(Pawn("black"))),Block(mutableStateOf(Pawn("black"))) ))
             }
             else if (i == 7){
-                board.add(mutableListOf<Block>(Block("black rook"),Block("black knight"),Block("black bishop"),Block("black queen"),Block("black king"),Block("black bishop"),Block("black knight"),Block("black rook")))
+                board.add(mutableListOf<Block>(Block(mutableStateOf(Rook("black"))),Block(mutableStateOf(Knight("black"))),Block(mutableStateOf(Bishop("black"))),Block(mutableStateOf(Queen("black"))),Block(mutableStateOf(King("black"))),Block(mutableStateOf(Bishop("black"))),Block(mutableStateOf(Knight("black"))),Block(mutableStateOf(Rook("black"))) ))
             }
             else{
-                board.add(mutableListOf<Block>(Block(null), Block(null),Block(null),Block(null),Block(null),Block(null),Block(null),Block(null)))
+                board.add(mutableListOf<Block>(Block(mutableStateOf(null)),Block(mutableStateOf(null)),Block(mutableStateOf(null)),Block(mutableStateOf(null)),Block(mutableStateOf(null)),Block(mutableStateOf(null)),Block(mutableStateOf(null)),Block(mutableStateOf(null)) ))
             }
 
 
@@ -358,7 +355,7 @@ class Game {
         var maxValue = -1000000
         var bestMove: Move? = null
         //reached depth
-        var duration = (System.currentTimeMillis() - startTime)/1000.0;
+        var duration = (System.currentTimeMillis() - startTime)/1000.0
         if (depth == 0 || duration >= 15){
             return listOf(evalGame(board), bestMove)
         }
@@ -401,7 +398,7 @@ class Game {
         var minValue = 1000000
         var bestMove: Move? = null
 
-        var duration = (System.currentTimeMillis() - startTime)/1000.0;
+        var duration = (System.currentTimeMillis() - startTime)/1000.0
         //reached depth
 
         if (depth == 0 || duration  >= 15){

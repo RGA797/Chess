@@ -12,9 +12,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.example.chess.viewModel.Game
-import com.example.chess.viewModel.UiRemembrance
 
 @Composable
 fun Menu(navController: NavController) {

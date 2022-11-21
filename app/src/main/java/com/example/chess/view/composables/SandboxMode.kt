@@ -14,23 +14,23 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import com.example.chess.model.pieces.*
 import com.example.chess.viewModel.Game
-import com.example.chess.viewModel.UiRemembrance
+import com.example.chess.viewModel.UiViewModel
 
 @Composable
-fun SandboxMode(game: Game, uiRemembrance: UiRemembrance){
+fun SandboxMode(game: Game, uiViewModel: UiViewModel){
     Column() {
-        SandboxBoard(game, uiRemembrance)
+        SandboxBoard(game, uiViewModel)
         UndoButton(gameObject = game)
-        RecommendButton(gameObject = game, uiRemembrance = uiRemembrance )
-        RecommendDisplay(uiRemembrance = uiRemembrance)
+        RecommendButton(gameObject = game, uiViewModel = uiViewModel )
+        RecommendDisplay(uiViewModel = uiViewModel)
     }
 }
 @Composable
-fun SandboxBlock(isBlack: Boolean, gameObject: Game, position: List<Int>, uiRemembrance: UiRemembrance){
+fun SandboxBlock(isBlack: Boolean, gameObject: Game, position: List<Int>, uiViewModel: UiViewModel){
     val block = remember { gameObject.board[position[0]][position[1]] }
-    val firstClick = remember {uiRemembrance.firstClick}
-    val lastClickPosition = remember {uiRemembrance.lastClickPosition}
-    val possibleMoves = remember {uiRemembrance.possibleMoves}
+    val firstClick = remember {uiViewModel.uiModel.firstClick}
+    val lastClickPosition = remember {uiViewModel.uiModel.lastClickPosition}
+    val possibleMoves = remember {uiViewModel.uiModel.possibleMoves}
     val blockColor = remember{ mutableStateOf(Color.White) }
     if (isBlack){
         blockColor.value = Color.Gray
@@ -39,9 +39,9 @@ fun SandboxBlock(isBlack: Boolean, gameObject: Game, position: List<Int>, uiReme
     Button(onClick = {
         if (firstClick.value){
             if (block.piece.value != null) {
-                uiRemembrance.changeLastClickPosition(position)
-                uiRemembrance.changeFirstClick(!firstClick.value)
-                uiRemembrance.changepossibleMoves(gameObject.getValidMoves(gameObject.board,block.piece.value!!.team))
+                uiViewModel.changeLastClickPosition(position)
+                uiViewModel.changeFirstClick(!firstClick.value)
+                uiViewModel.changepossibleMoves(gameObject.getValidMoves(gameObject.board,block.piece.value!!.team))
             }
         }
         else{
@@ -50,17 +50,17 @@ fun SandboxBlock(isBlack: Boolean, gameObject: Game, position: List<Int>, uiReme
                     if (possibleMoves[i].newPosition[0] == position[0] && possibleMoves[i].newPosition[1] == position[1]) {
                         if (possibleMoves[i].oldPosition[0] == lastClickPosition[0] && possibleMoves[i].oldPosition[1] == lastClickPosition[1]){
                             gameObject.resolveMove(possibleMoves[i])
-                            uiRemembrance.changeFirstClick(!firstClick.value)
+                            uiViewModel.changeFirstClick(!firstClick.value)
                             break
                         }
                     }
                 }
                 if (block.piece.value == null){
-                    uiRemembrance.changeFirstClick(!firstClick.value)
+                    uiViewModel.changeFirstClick(!firstClick.value)
                 }
             }
             else{
-                uiRemembrance.changeFirstClick(!firstClick.value)
+                uiViewModel.changeFirstClick(!firstClick.value)
             }
         }
     } ,modifier = Modifier
@@ -177,7 +177,7 @@ fun SandboxBlock(isBlack: Boolean, gameObject: Game, position: List<Int>, uiReme
 }
 
 @Composable
-fun SandboxBoard(game: Game, uiRemembrance: UiRemembrance) {
+fun SandboxBoard(game: Game, uiViewModel: UiViewModel) {
     Box() {
         Column() {
             var x = 1
@@ -185,10 +185,10 @@ fun SandboxBoard(game: Game, uiRemembrance: UiRemembrance) {
                 Row(modifier = Modifier.fillMaxWidth()) {
                     for (j in 0..7) {
                         if (x %2 == 0) {
-                            SandboxBlock(true, game, listOf(i, j),uiRemembrance)
+                            SandboxBlock(true, game, listOf(i, j),uiViewModel)
                         }
                         else{
-                            SandboxBlock(false, game, listOf(i, j),uiRemembrance)
+                            SandboxBlock(false, game, listOf(i, j),uiViewModel)
                         }
                         x++
                         if (j == 7){

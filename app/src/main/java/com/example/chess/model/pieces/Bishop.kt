@@ -43,5 +43,4 @@ class Bishop(team: String) : Piece(team) {
         return moveList
     }
 
-
 }

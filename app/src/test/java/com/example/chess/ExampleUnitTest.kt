@@ -2,10 +2,8 @@ package com.example.chess
 
 import com.example.chess.model.Move
 import com.example.chess.viewModel.Game
+import org.junit.Assert.assertEquals
 import org.junit.Test
-
-import org.junit.Assert.*
-import java.time.LocalDateTime
 import kotlin.system.measureTimeMillis
 
 /**
@@ -38,7 +36,7 @@ class ExampleUnitTest {
         game.resolveMove(Move(listOf(6,1), listOf(4,1), false, null,"double"))
 
         val boardBeforeResolveUndo = game.board
-        val whiteMoves = game.getPossibleMoves("white", game.board)
+        val whiteMoves = game.getPossibleMoves("white", game.board, game.updatedLastMove())
         for (i in whiteMoves.indices){
             if (whiteMoves[i].specialMove == "en passant"){
                 val move =  whiteMoves[i]
@@ -47,7 +45,7 @@ class ExampleUnitTest {
             }
         }
 
-        val blackMoves = game.getPossibleMoves("black", game.board)
+        val blackMoves = game.getPossibleMoves("black", game.board, game.updatedLastMove())
         for (i in blackMoves.indices){
             if (blackMoves[i].specialMove == "en passant"){
                 val move =  blackMoves[i]
