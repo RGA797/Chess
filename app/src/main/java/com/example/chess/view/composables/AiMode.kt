@@ -104,7 +104,7 @@ fun AiBlock(isBlack: Boolean, gameObject: Game, position: List<Int>, uiViewModel
                         if (possibleMoves[i].oldPosition[0] == lastClickPosition[0] && possibleMoves[i].oldPosition[1] == lastClickPosition[1]){
                             gameObject.resolveMove(possibleMoves[i])
                             uiViewModel.changeFirstClick(!firstClick.value)
-                            gameObject.resolveMove(gameObject.max(-10000000,1000000, 4, System.currentTimeMillis())[1] as Move)
+                            gameObject.resolveMove(gameObject.max(-10000000,1000000, 2, System.currentTimeMillis())[1] as Move)
                             break
                         }
                     }

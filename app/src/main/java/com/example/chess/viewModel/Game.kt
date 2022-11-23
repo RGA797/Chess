@@ -357,7 +357,7 @@ class Game {
         var bestMove: Move? = null
         //reached depth
         var duration = (System.currentTimeMillis() - startTime)/1000.0
-        if (depth == 0 || duration >= 15){
+        if (depth == 0 || duration >= 30){
             return listOf(evalGame(board), null)
         }
 
@@ -368,7 +368,7 @@ class Game {
 
         for (i in moveList.indices){
             duration = (System.currentTimeMillis() - startTime)/1000.0
-            if (duration < 15){
+            if (duration < 30){
                 resolveMove(moveList[i])
                 val nodeResult = min(alphaTemp, beta, depth-1, startTime)
                 val nodeValue = nodeResult[0] as Int
@@ -387,7 +387,7 @@ class Game {
 
                 // Alpha Beta Pruning
                 duration = (System.currentTimeMillis() - startTime)/1000.0
-                if (beta <= alphaTemp || duration >= 15) {
+                if (beta <= alphaTemp || duration >= 30) {
                     break
                 }
             }
@@ -402,7 +402,7 @@ class Game {
         var duration = (System.currentTimeMillis() - startTime)/1000.0
         //reached depth
 
-        if (depth == 0 || duration  >= 15){
+        if (depth == 0 || duration  >= 30){
             return listOf(evalGame(board), null)
         }
 
@@ -414,7 +414,7 @@ class Game {
 
         for (i in moveList.indices){
             duration = (System.currentTimeMillis() - startTime)/1000.0
-            if (duration < 15){
+            if (duration < 30){
                 resolveMove(moveList[i])
                 val nodeResult = max(alpha, betaTemp, depth-1, startTime)
                 val nodeValue = nodeResult[0] as Int
@@ -433,7 +433,7 @@ class Game {
 
                 // Alpha Beta Pruning
                 duration = (System.currentTimeMillis() - startTime)/1000.0
-                if (betaTemp <= alpha || duration >= 15) {
+                if (betaTemp <= alpha || duration >= 30) {
                     break
                 }
             }
