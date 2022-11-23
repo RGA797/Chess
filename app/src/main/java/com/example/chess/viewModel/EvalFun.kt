@@ -8,6 +8,7 @@ import com.example.chess.viewModel.Game.kingIsCheck
 import com.example.chess.viewModel.Game.kingIsMate
 import com.example.chess.viewModel.Game.resolveMove
 import com.example.chess.viewModel.Game.undoMove
+import java.util.*
 
 object EvalFun {
 
@@ -183,6 +184,36 @@ object EvalFun {
         }
         return listOf(minValue, bestMove)
     }
+
+    fun pawnPoints() {
+        val boardArr_black = arrayOf(
+            doubleArrayOf(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0),
+            doubleArrayOf(5.0, 1.0, -2.0, -2.0, -2.0, 0.0, 3.0, 4.0),
+            doubleArrayOf(6.5, 0.5, -4.0, -4.0, -4.0, -1.0, 3.5, 5.0),
+            doubleArrayOf(10.0, 2.0, -4.0, -4.0, -4.0, 0.0, 6.0, 8.0),
+            doubleArrayOf(14.5, 4.5, -3.0, -3.0, -3.0, 2.0, 9.5, 12.0),
+            doubleArrayOf(29.0, 17.0, 8.0, 8.0, 8.0, 14.0, 23.0, 26.0),
+            doubleArrayOf(47.5, 33.5, 23.0, 23.0, 23.0, 30.0, 41.5, 44.0),
+            doubleArrayOf(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0))
+
+        val boardArr_white = arrayOf(
+            doubleArrayOf(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0),
+            doubleArrayOf(23.0, 30.0, 41.5, 44.0, 47.5, 33.5, 23.0, 23.0),
+            doubleArrayOf(8.0, 14.0, 23.0, 26.0, 29.0, 17.0, 8.0, 8.0),
+            doubleArrayOf(-3.0, 2.0, 9.5, 12.0, 14.5, 4.5, -3.0, -3.0),
+            doubleArrayOf(-4.0, 0.0, 6.0, 8.0, 10.0, 2.0, -4.0, -4.0),
+            doubleArrayOf(-4.0, -1.0, 3.5, 5.0, 6.5, 0.5, -4.0, -4.0),
+            doubleArrayOf(23.0, 30.0, 41.5, 0.0, 0.0, 0.0, 0.0, 0.0),
+            doubleArrayOf(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0))
+
+
+
+        //println(Arrays.deepToString(boardArr_black))
+        println(boardArr_black.contentDeepToString())
+
+    }
+
+
 
 
 }
