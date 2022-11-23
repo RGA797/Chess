@@ -86,7 +86,7 @@ object EvalFun {
                             value -= 300
                         }
                         if (gameState[i][j].piece.value is Pawn) {
-                            value -= 300
+                            value -= 100
                         }
                     }
                 }
@@ -208,7 +208,7 @@ object EvalFun {
 
 
 
-        //println(Arrays.deepToString(boardArr_black))
+        //println(Arrays.deepToString(boardArr_black)) //works as well
         println(boardArr_black.contentDeepToString())
 
     }
