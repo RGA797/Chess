@@ -1,4 +1,4 @@
-This is an instruction in how to run the program.
+#This is an instruction in how to run the program.
 
 The program is made in Kotlin as an Android mobile application. 
 
@@ -17,8 +17,7 @@ SETUP METHOD TWO:
 
 
 HOW TO PLAY?
-1.  //TODO!! 
-
-
-
-
+1. Select the category which you want to play
+2. Click on the piece you want to move, and then click on the field you want it moved to.
+3. If you are playing the AI opponent, then the AI opponent will calculate its next move for max 15 seconds, and then make its move. 
+4. Repeat steps 2-3 until stale mate or a winner has been found.
