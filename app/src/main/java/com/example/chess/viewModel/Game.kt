@@ -3,6 +3,7 @@ package com.example.chess.viewModel
 import androidx.compose.runtime.*
 import com.example.chess.model.*
 import com.example.chess.model.pieces.*
+import java.util.*
 
 object Game {
 
@@ -34,6 +35,8 @@ object Game {
         
 
         //var arr = arrayOf(intArrayOf(1, 2, 3), intArrayOf(4, 5, 6), intArrayOf(7, 8, 9))
+        EvalFun.pawnPoints()
+
     }
 
     fun updatedLastMove(): Move?{
