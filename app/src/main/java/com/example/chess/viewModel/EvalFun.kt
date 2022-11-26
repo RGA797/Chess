@@ -95,12 +95,13 @@ object EvalFun {
     }
 
 
-    fun maxVal(alpha: Int, beta: Int, depth: Int, startTime: Long): List<Any?> {
+    fun maxVal(alpha: Int, beta: Int, depth: Int, startTime: Long, timeLimit: Int): List<Any?> {
         var maxValue = -1000000
         var bestMove: Move? = null
+
         //reached depth
         var duration = (System.currentTimeMillis() - startTime) / 1000.0
-        if (depth == 0 || duration >= 15) {
+        if (depth == 0 || duration >= timeLimit) {
             return listOf(heuristics(Game.board), bestMove)
         }
 
@@ -108,12 +109,71 @@ object EvalFun {
         //we then set a new minValue if needed
         val moveList = getValidMoves(Game.board, "black")
         var alphaTemp = alpha
+        val movescoreList = mutableListOf<Int>()
 
-        for (i in moveList.indices) {
+        //move ordering. following MVV-LVA
+        for (i in moveList.indices){
+            var movescore = 0
+            // prioritize capture moves in accordance with MVV-LVA
+            //movescore following MVV-LVA score. following advice for scoring from forum: https://www.talkchess.com/forum3/viewtopic.php?t=61021
+            if (moveList[i].enemyDestroyed){
+                //MVV score
+                when (Game.board[moveList[i].newPosition[0]][moveList[i].newPosition[1]].piece.value) {
+                    is Queen -> {
+                        movescore += 900
+                    }
+                    is Rook -> {
+                        movescore += 500
+                    }
+                    is Bishop -> {
+                        movescore += 300
+                    }
+                    is Knight -> {
+                        movescore += 300
+                    }
+                    is Pawn -> {
+                        movescore += 100
+                    }
+                }
+
+                //LVA score
+                if (moveList[i].enemyDestroyed) {
+                    when (Game.board[moveList[i].newPosition[0]][moveList[i].newPosition[1]].piece.value) {
+                        is Queen -> {
+                            movescore -= 5
+                        }
+                        is Rook -> {
+                            movescore -= 4
+                        }
+                        is Bishop -> {
+                            movescore -= 3
+                        }
+                        is Knight -> {
+                            movescore -= 2
+                        }
+                        is Pawn -> {
+                            movescore -= 1
+                        }
+                    }
+                }
+            }
+            movescoreList.add(movescore)
+        }
+
+        //combine movelist with the scores for respective moves
+        val weightedMovelist = mutableListOf<List<Any>>()
+        for (i in moveList.indices){
+            weightedMovelist.add(listOf(moveList[i], movescoreList[i]))
+        }
+
+        //sort weighted movelist by score
+        weightedMovelist.sortByDescending { it[1] as Int}
+
+        for (i in weightedMovelist.indices) {
             duration = (System.currentTimeMillis() - startTime) / 1000.0
-            if (duration < 15) {
-                resolveMove(moveList[i])
-                val nodeResult = minVal(alphaTemp, beta, depth - 1, startTime)
+            if (duration < timeLimit) {
+                resolveMove(weightedMovelist[i][0] as Move)
+                val nodeResult = minVal(alphaTemp, beta, depth - 1, startTime, timeLimit)
                 val nodeValue = nodeResult[0] as Int
 
                 if (nodeValue > maxValue) {
@@ -130,7 +190,7 @@ object EvalFun {
 
                 // Alpha Beta Pruning
                 duration = (System.currentTimeMillis() - startTime) / 1000.0
-                if (beta <= alphaTemp || duration >= 15) {
+                if (beta <= alphaTemp || duration >= timeLimit) {
                     break
                 }
             }
@@ -138,14 +198,14 @@ object EvalFun {
         return listOf(maxValue, bestMove)
     }
 
-    fun minVal(alpha: Int, beta: Int, depth: Int, startTime: Long): List<Any?> {
+    fun minVal(alpha: Int, beta: Int, depth: Int, startTime: Long, timeLimit: Int): List<Any?> {
         var minValue = 1000000
         var bestMove: Move? = null
 
         var duration = (System.currentTimeMillis() - startTime) / 1000.0
         //reached depth
 
-        if (depth == 0 || duration >= 15) {
+        if (depth == 0 || duration >= timeLimit) {
             return listOf(heuristics(Game.board), bestMove)
         }
 
@@ -153,13 +213,99 @@ object EvalFun {
         //we then set a new minValue if needed
         val moveList = getValidMoves(Game.board, "white")
         var betaTemp = beta
+        var movescoreList = mutableListOf<Int>()
 
 
-        for (i in moveList.indices) {
+        //move ordering. following MVV-LVA
+        for (i in moveList.indices){
+            var movescore = 0
+            // prioritize capture moves in accordance with MVV-LVA
+            //movescore following MVV-LVA score. following advice for scoring from forum: https://www.talkchess.com/forum3/viewtopic.php?t=61021
+            if (moveList[i].enemyDestroyed){
+                //MVV score
+                when (Game.board[moveList[i].newPosition[0]][moveList[i].newPosition[1]].piece.value) {
+                    is Queen -> {
+                        movescore += 900
+                    }
+                    is Rook -> {
+                        movescore += 500
+                    }
+                    is Bishop -> {
+                        movescore += 300
+                    }
+                    is Knight -> {
+                        movescore += 300
+                    }
+                    is Pawn -> {
+                        movescore += 100
+                    }
+                }
+
+                //LVA score
+                if (moveList[i].enemyDestroyed) {
+                    when (Game.board[moveList[i].newPosition[0]][moveList[i].newPosition[1]].piece.value) {
+                        is Queen -> {
+                            movescore -= 5
+                        }
+                        is Rook -> {
+                            movescore -= 4
+                        }
+                        is Bishop -> {
+                            movescore -= 3
+                        }
+                        is Knight -> {
+                            movescore -= 2
+                        }
+                        is Pawn -> {
+                            movescore -= 1
+                        }
+                    }
+                }
+            }
+            else{
+                when (Game.board[moveList[i].newPosition[0]][moveList[i].newPosition[1]].piece.value) {
+                    is Queen -> {
+                        movescore -= 5
+                    }
+                    is Rook -> {
+                        movescore -= 4
+                    }
+                    is Bishop -> {
+                        movescore -= 3
+                    }
+                    is Knight -> {
+                        movescore -= 2
+                    }
+                    is Pawn -> {
+                        movescore -= 1
+                    }
+                }
+
+            }
+
+
+
+
+            movescoreList.add(movescore)
+        }
+
+        //combine movelist with the scores for respective moves
+        val weightedMovelist = mutableListOf<List<Any>>()
+        for (i in moveList.indices){
+            weightedMovelist.add(listOf(moveList[i], movescoreList[i]))
+        }
+
+        //sort weighted movelist by score
+        weightedMovelist.sortByDescending { it[1] as Int}
+
+        //sort moves from highest score to lowest
+        for (i in weightedMovelist.indices) {
+
             duration = (System.currentTimeMillis() - startTime) / 1000.0
-            if (duration < 15) {
-                resolveMove(moveList[i])
-                val nodeResult = maxVal(alpha, betaTemp, depth - 1, startTime)
+            if (duration < timeLimit) {
+
+                resolveMove(weightedMovelist[i][0] as Move)
+                val nodeResult = maxVal(alpha, betaTemp, depth - 1, startTime, timeLimit)
                 val nodeValue = nodeResult[0] as Int
 
                 if (nodeValue < minValue) {
@@ -176,11 +322,12 @@ object EvalFun {
 
                 // Alpha Beta Pruning
                 duration = (System.currentTimeMillis() - startTime) / 1000.0
-                if (betaTemp <= alpha || duration >= 15) {
+                if (betaTemp <= alpha || duration >= timeLimit) {
                     break
                 }
             }
         }
+
         return listOf(minValue, bestMove)
     }
 

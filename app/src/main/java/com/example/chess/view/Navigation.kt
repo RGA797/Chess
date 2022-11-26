@@ -16,8 +16,11 @@ fun Navigation(){
         composable(Screens.Menu.route){
             Menu(navController = navController)
         }
-        composable(Screens.AiMode.route){
-            AiMode(game, ui)
+        composable(Screens.AiModePlayerWhite.route){
+            AiModePlayerWhite(game, ui)
+        }
+        composable(Screens.AiModePlayerBlack.route){
+            AiModePlayerBlack(game, ui)
         }
         composable(Screens.SandboxMode.route){
             SandboxMode(game, ui)

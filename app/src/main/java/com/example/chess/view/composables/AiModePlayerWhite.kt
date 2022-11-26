@@ -12,23 +12,68 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
+import com.example.chess.model.*
 import com.example.chess.model.pieces.*
+import com.example.chess.viewModel.EvalFun
 import com.example.chess.viewModel.Game
 import com.example.chess.viewModel.UiRemembrance
 
 @Composable
-fun SandboxMode(game: Game, uiRemembrance: UiRemembrance){
+fun AiModePlayerWhite(gameObject: Game, uiRemembrance: UiRemembrance){
     Column() {
-        SandboxBoard(game, uiRemembrance)
-        UndoButton(gameObject = game)
+        AiBoardWhite(gameObject, uiRemembrance)
+        DoubleUndoButton(gameObject = gameObject)
         RecommendButtonWhite(uiRemembrance = uiRemembrance)
-        RecommendButtonBlack(uiRemembrance = uiRemembrance)
         RecommendDisplay(uiRemembrance = uiRemembrance)
     }
 }
 @Composable
-fun SandboxBlock(isBlack: Boolean, gameObject: Game, position: List<Int>, uiRemembrance: UiRemembrance){
-    val block = remember { gameObject.board[position[0]][position[1]] }
+fun DoubleUndoButton(gameObject: Game){
+    Button(onClick = {
+        gameObject.undoMove()
+        gameObject.undoMove()
+    }
+        , modifier = Modifier
+            .height(70.dp)
+            .width(100.dp),
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red)
+    ){
+        Text(
+        text = "Undo",
+        modifier = Modifier.padding(bottom = 1.dp),
+        style = MaterialTheme.typography.h5
+    )
+    }
+}
+@Composable
+fun AiBoardWhite(gameObject: Game, uiRemembrance: UiRemembrance ) {
+    Box() {
+        Column() {
+            var x = 1
+            for (i in 7 downTo 0) {
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    for (j in 0..7) {
+                        if (x %2 == 0) {
+                            AiBlockWhite(true, gameObject, listOf(i, j),uiRemembrance)
+                        }
+                        else{
+                            AiBlockWhite(false, gameObject, listOf(i, j),uiRemembrance)
+                        }
+                        x++
+                        if (j == 7){
+                            x++
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+@Composable
+fun AiBlockWhite(isBlack: Boolean, gameObject: Game, position: List<Int>, uiRemembrance: UiRemembrance){
+    val block = remember { Game.board[position[0]][position[1]] }
     val firstClick = remember {uiRemembrance.firstClick}
     val lastClickPosition = remember {uiRemembrance.lastClickPosition}
     val possibleMoves = remember {uiRemembrance.possibleMoves}
@@ -40,9 +85,16 @@ fun SandboxBlock(isBlack: Boolean, gameObject: Game, position: List<Int>, uiReme
     Button(onClick = {
         if (firstClick.value){
             if (block.piece.value != null) {
-                uiRemembrance.changeLastClickPosition(position)
-                uiRemembrance.changeFirstClick(!firstClick.value)
-                uiRemembrance.changepossibleMoves(gameObject.getValidMoves(gameObject.board,block.piece.value!!.team))
+                if (block.piece.value!!.team == "white") {
+                    uiRemembrance.changeLastClickPosition(position)
+                    uiRemembrance.changeFirstClick(!firstClick.value)
+                    uiRemembrance.changepossibleMoves(
+                        Game.getValidMoves(
+                            Game.board,
+                            block.piece.value!!.team
+                        )
+                    )
+                }
             }
         }
         else{
@@ -50,8 +102,9 @@ fun SandboxBlock(isBlack: Boolean, gameObject: Game, position: List<Int>, uiReme
                 for (i in possibleMoves.indices) {
                     if (possibleMoves[i].newPosition[0] == position[0] && possibleMoves[i].newPosition[1] == position[1]) {
                         if (possibleMoves[i].oldPosition[0] == lastClickPosition[0] && possibleMoves[i].oldPosition[1] == lastClickPosition[1]){
-                            gameObject.resolveMove(possibleMoves[i])
+                            Game.resolveMove(possibleMoves[i])
                             uiRemembrance.changeFirstClick(!firstClick.value)
+                            Game.resolveMove(EvalFun.maxVal(-10000000,1000000, 4, System.currentTimeMillis(), 15)[1] as Move)
                             break
                         }
                     }
@@ -172,32 +225,6 @@ fun SandboxBlock(isBlack: Boolean, gameObject: Game, position: List<Int>, uiReme
                     modifier = Modifier.padding(bottom = 1.dp),
                     style = MaterialTheme.typography.h5
                 )
-            }
-        }
-    }
-}
-
-@Composable
-fun SandboxBoard(game: Game, uiRemembrance: UiRemembrance) {
-    Box() {
-        Column() {
-            var x = 1
-            for (i in 7 downTo 0) {
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    for (j in 0..7) {
-                        if (x %2 == 0) {
-                            SandboxBlock(true, game, listOf(i, j),uiRemembrance)
-                        }
-                        else{
-                            SandboxBlock(false, game, listOf(i, j),uiRemembrance)
-                        }
-                        x++
-                        if (j == 7){
-                            x++
-                        }
-                    }
-
-                }
             }
         }
     }

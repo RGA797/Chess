@@ -19,34 +19,17 @@ import com.example.chess.viewModel.Game
 import com.example.chess.viewModel.UiRemembrance
 
 @Composable
-fun AiMode(gameObject: Game, uiRemembrance: UiRemembrance){
+fun AiModePlayerBlack(gameObject: Game, uiRemembrance: UiRemembrance){
     Column() {
-        AiBoard(gameObject, uiRemembrance)
+        AiBoardBlack(gameObject, uiRemembrance)
         DoubleUndoButton(gameObject = gameObject)
-        RecommendButton(gameObject = EvalFun, uiRemembrance = uiRemembrance )
+        RecommendButtonBlack(uiRemembrance = uiRemembrance)
         RecommendDisplay(uiRemembrance = uiRemembrance)
     }
 }
+
 @Composable
-fun DoubleUndoButton(gameObject: Game){
-    Button(onClick = {
-        gameObject.undoMove()
-        gameObject.undoMove()
-    }
-        , modifier = Modifier
-            .height(70.dp)
-            .width(100.dp),
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red)
-    ){
-        Text(
-        text = "Undo",
-        modifier = Modifier.padding(bottom = 1.dp),
-        style = MaterialTheme.typography.h5
-    )
-    }
-}
-@Composable
-fun AiBoard(gameObject: Game, uiRemembrance: UiRemembrance ) {
+fun AiBoardBlack(gameObject: Game, uiRemembrance: UiRemembrance ) {
     Box() {
         Column() {
             var x = 1
@@ -54,10 +37,10 @@ fun AiBoard(gameObject: Game, uiRemembrance: UiRemembrance ) {
                 Row(modifier = Modifier.fillMaxWidth()) {
                     for (j in 0..7) {
                         if (x %2 == 0) {
-                            AiBlock(true, gameObject, listOf(i, j),uiRemembrance)
+                            AiBlockBlack(true, gameObject, listOf(i, j),uiRemembrance)
                         }
                         else{
-                            AiBlock(false, gameObject, listOf(i, j),uiRemembrance)
+                            AiBlockBlack(false, gameObject, listOf(i, j),uiRemembrance)
                         }
                         x++
                         if (j == 7){
@@ -72,7 +55,7 @@ fun AiBoard(gameObject: Game, uiRemembrance: UiRemembrance ) {
 
 
 @Composable
-fun AiBlock(isBlack: Boolean, gameObject: Game, position: List<Int>, uiRemembrance: UiRemembrance){
+fun AiBlockBlack(isBlack: Boolean, gameObject: Game, position: List<Int>, uiRemembrance: UiRemembrance){
     val block = remember { Game.board[position[0]][position[1]] }
     val firstClick = remember {uiRemembrance.firstClick}
     val lastClickPosition = remember {uiRemembrance.lastClickPosition}
@@ -85,7 +68,7 @@ fun AiBlock(isBlack: Boolean, gameObject: Game, position: List<Int>, uiRemembran
     Button(onClick = {
         if (firstClick.value){
             if (block.piece.value != null) {
-                if (block.piece.value!!.team == "white") {
+                if (block.piece.value!!.team == "black") {
                     uiRemembrance.changeLastClickPosition(position)
                     uiRemembrance.changeFirstClick(!firstClick.value)
                     uiRemembrance.changepossibleMoves(
@@ -104,7 +87,7 @@ fun AiBlock(isBlack: Boolean, gameObject: Game, position: List<Int>, uiRemembran
                         if (possibleMoves[i].oldPosition[0] == lastClickPosition[0] && possibleMoves[i].oldPosition[1] == lastClickPosition[1]){
                             Game.resolveMove(possibleMoves[i])
                             uiRemembrance.changeFirstClick(!firstClick.value)
-                            Game.resolveMove(EvalFun.maxVal(-10000000,1000000, 4, System.currentTimeMillis())[1] as Move)
+                            Game.resolveMove(EvalFun.minVal(-10000000,1000000, 4, System.currentTimeMillis(), 15)[1] as Move)
                             break
                         }
                     }

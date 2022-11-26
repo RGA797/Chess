@@ -19,14 +19,28 @@ import com.example.chess.viewModel.UiRemembrance
 @Composable
 fun Menu(navController: NavController) {
     Column() {
-        Button(onClick = {navController.navigate(Screens.AiMode.route)
+        Button(onClick = {navController.navigate(Screens.AiModePlayerWhite.route)
         } ,modifier = Modifier
             .height(100.dp)
             .width(100.dp),
             colors = ButtonDefaults.buttonColors(backgroundColor = Color.Cyan),
             shape = RectangleShape
-        ){
-            Text(text = "Versus AI Mode")
+        )
+
+        {
+            Text(text = "white vs  black AI")
+        }
+
+        Button(onClick = {navController.navigate(Screens.AiModePlayerBlack.route)
+        } ,modifier = Modifier
+            .height(100.dp)
+            .width(100.dp),
+            colors = ButtonDefaults.buttonColors(backgroundColor = Color.Cyan),
+            shape = RectangleShape
+        )
+
+        {
+            Text(text = "black vs  white AI")
         }
         Button(onClick = {navController.navigate(Screens.SandboxMode.route)
         } ,modifier = Modifier

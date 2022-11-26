@@ -18,9 +18,9 @@ import com.example.chess.viewModel.Game
 import com.example.chess.viewModel.UiRemembrance
 
 @Composable
-fun RecommendButton(gameObject: EvalFun, uiRemembrance: UiRemembrance){
+fun RecommendButtonWhite(uiRemembrance: UiRemembrance){
     Button(onClick = {
-        val move: Move? = EvalFun.minVal(-10000000,1000000, 4, System.currentTimeMillis())[1] as Move?
+        val move: Move? = EvalFun.minVal(-10000000,1000000, 4, System.currentTimeMillis(), 15)[1] as Move?
         if (move != null){
             uiRemembrance.changeRecommendedMove("" + move.oldPosition[0]+","+move.oldPosition[1] + " ->" + move.newPosition[0]+","+move.newPosition[1])
         }
@@ -34,10 +34,34 @@ fun RecommendButton(gameObject: EvalFun, uiRemembrance: UiRemembrance){
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.Green)
     ){
         Text(
-        text = "Recommend move",
+        text = "Recommend move for white",
         modifier = Modifier.padding(bottom = 1.dp),
         style = MaterialTheme.typography.h5
     )
+    }
+}
+
+@Composable
+fun RecommendButtonBlack(uiRemembrance: UiRemembrance){
+    Button(onClick = {
+        val move: Move? = EvalFun.maxVal(-10000000,1000000, 4, System.currentTimeMillis(), 15)[1] as Move?
+        if (move != null){
+            uiRemembrance.changeRecommendedMove("" + move.oldPosition[0]+","+move.oldPosition[1] + " ->" + move.newPosition[0]+","+move.newPosition[1])
+        }
+        else{
+            uiRemembrance.changeRecommendedMove("No possible moves!")
+        }
+    }
+        , modifier = Modifier
+            .height(80.dp)
+            .width(200.dp),
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Blue)
+    ){
+        Text(
+            text = "Recommend move for black",
+            modifier = Modifier.padding(bottom = 1.dp),
+            style = MaterialTheme.typography.h5
+        )
     }
 }
 
