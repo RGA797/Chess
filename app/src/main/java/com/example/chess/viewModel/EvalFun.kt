@@ -42,7 +42,7 @@ object EvalFun {
                             is Rook -> value += 500
                             is Bishop -> value += 300
                             is Knight -> value += 300
-                            is Pawn ->  value += 300
+                            is Pawn ->  value += 100
 
                         }
                     }
