@@ -95,32 +95,32 @@ class Pawn(team: String) : Piece(team) {
                             //take to the left (differs for teams)
                         val pieceOne = currentBlock.piece.value?.team
                         val pieceTwo = gameState[lastMove.newPosition[0]][lastMove.newPosition[1]].piece.value?.team
-                            if (pieceOne  == "black" && pieceTwo == "white") {
-                                moveList.add(
-                                    Move(
-                                        piecePosition,
-                                        crossOnePosition,
-                                        true,
-                                        lastMove.newPosition,
-                                        "en passant"
-                                    )
+                        if (pieceOne  == "black" && pieceTwo == "white") {
+                            moveList.add(
+                                Move(
+                                    piecePosition,
+                                    crossOnePosition,
+                                    true,
+                                    lastMove.newPosition,
+                                    "en passant"
                                 )
-                            }
-                            if (currentBlock.piece.value!!.team == "white" && gameState[lastMove.newPosition[0]][lastMove.newPosition[1]].piece.value!!.team == "black") {
-                                moveList.add(
-                                    Move(
-                                        piecePosition,
-                                        crossTwoPosition,
-                                        true,
-                                        lastMove.newPosition,
-                                        "en passant"
-                                    )
+                            )
+                        }
+                        if (currentBlock.piece.value!!.team == "white" && gameState[lastMove.newPosition[0]][lastMove.newPosition[1]].piece.value!!.team == "black") {
+                            moveList.add(
+                                Move(
+                                    piecePosition,
+                                    crossTwoPosition,
+                                    true,
+                                    lastMove.newPosition,
+                                    "en passant"
                                 )
-                            }
+                            )
                         }
                     }
                 }
             }
+        }
         catch (e: NullPointerException){
 
         }

@@ -62,7 +62,7 @@ class ExampleUnitTest {
         val game = Game()
         //this little test shows that min prefers moves that actually put them ahead in point
         val elapsed = measureTimeMillis {
-            game.min(-10000000,1000000, 6, System.currentTimeMillis())
+            game.min(-10000000,1000000, 3, System.currentTimeMillis())
         }
         print(elapsed)
     }

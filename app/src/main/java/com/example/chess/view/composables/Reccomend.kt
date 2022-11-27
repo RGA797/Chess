@@ -19,7 +19,7 @@ import com.example.chess.viewModel.UiViewModel
 @Composable
 fun RecommendButton(gameObject: Game, uiViewModel: UiViewModel){
     Button(onClick = {
-        val move: Move? = gameObject.min(-10000000,1000000, 2, System.currentTimeMillis())[1] as Move?
+        val move: Move? = gameObject.min(-10000000,1000000, 3, System.currentTimeMillis())[1] as Move?
         if (move != null){
             uiViewModel.changeRecommendedMove("" + move.oldPosition[0]+","+move.oldPosition[1] + " ->" + move.newPosition[0]+","+move.newPosition[1])
         }
