@@ -61,7 +61,6 @@ class Game {
 
         if (kingIsCheck(enemyMoves, getKingPosition(team, gameState))) {
             for (i in teamMoves.indices) {
-                if (teamMoves[i].oldPosition == getKingPosition(team, gameState)) {
                     resolveMove(teamMoves[i])
                     if (team == "white"){
                         enemyMoves = getPossibleMoves("black",gameState,updatedLastMove())
@@ -76,7 +75,6 @@ class Game {
                         validMoves.add(teamMoves[i])
                         undoMove()
                     }
-                }
             }
             return validMoves
         }
