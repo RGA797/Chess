@@ -20,7 +20,10 @@ import com.example.chess.viewModel.UiRemembrance
 @Composable
 fun RecommendButtonWhite(uiRemembrance: UiRemembrance){
     Button(onClick = {
-        val move: Move? = EvalFun.minVal(-10000000,1000000, 4, System.currentTimeMillis(), 15)[1] as Move?
+        val min = EvalFun.minVal(-10000000,1000000, 3, System.currentTimeMillis(), 15)
+        val move: Move? = min[1] as Move?
+        print(EvalFun.nodeCounter)
+        EvalFun.nodeCounter = 0
         if (move != null){
             uiRemembrance.changeRecommendedMove("" + move.oldPosition[0]+","+move.oldPosition[1] + " ->" + move.newPosition[0]+","+move.newPosition[1])
         }
@@ -41,10 +44,13 @@ fun RecommendButtonWhite(uiRemembrance: UiRemembrance){
     }
 }
 
+
 @Composable
 fun RecommendButtonBlack(uiRemembrance: UiRemembrance){
     Button(onClick = {
-        val move: Move? = EvalFun.maxVal(-10000000,1000000, 4, System.currentTimeMillis(), 15)[1] as Move?
+        val move: Move? = EvalFun.maxVal(-10000000,10000000, 3, System.currentTimeMillis(), 15)[1] as Move?
+        print(EvalFun.nodeCounter)
+        EvalFun.nodeCounter = 0
         if (move != null){
             uiRemembrance.changeRecommendedMove("" + move.oldPosition[0]+","+move.oldPosition[1] + " ->" + move.newPosition[0]+","+move.newPosition[1])
         }

@@ -59,12 +59,28 @@ class ExampleUnitTest {
     }
 
     @Test
-    fun time(){
+    fun algorithmTime(){
         //this little test shows that min prefers moves that actually put them ahead in point
-        // depth 6 time: 942239 milis - 4.8 minutes!
-        //depth  4 time: 18822 milis - 0.3 minutes!
+
+        Game.resolveMove(Move(listOf(0,1), listOf(2,2), false, null,null ))
+        Game.resolveMove(Move(listOf(0,6), listOf(2,5), false, null,null ))
+        Game.resolveMove(Move(listOf(1,3), listOf(2,3), false, null,null))
+        Game.resolveMove(Move(listOf(0,2), listOf(2,4), false, null,null))
+
+        val move = EvalFun.maxVal(-10000000, 1000000, 3, System.currentTimeMillis(), 15)[1] as Move
+
+
+    }
+
+    @Test
+    fun moveListGenerationTime(){
+        Game.resolveMove(Move(listOf(0,1), listOf(2,2), false, null,null ))
+        Game.resolveMove(Move(listOf(0,6), listOf(2,5), false, null,null ))
+        Game.resolveMove(Move(listOf(1,3), listOf(2,3), false, null,null))
+        Game.resolveMove(Move(listOf(0,2), listOf(2,4), false, null,null))
+
         val elapsed = measureTimeMillis {
-            EvalFun.minVal(-10000000, 1000000, 6, System.currentTimeMillis(), 60*5)
+            val moveList = Game.getValidMoves(Game.board, "white")
         }
         print(elapsed)
     }

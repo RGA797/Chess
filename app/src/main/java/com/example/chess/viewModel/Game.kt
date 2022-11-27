@@ -1,15 +1,14 @@
 package com.example.chess.viewModel
 
-import androidx.compose.runtime.*
-import com.example.chess.model.*
-import com.example.chess.model.pieces.*
-import java.util.*
+import androidx.compose.runtime.mutableStateListOf
+import com.example.chess.model.Block
+import com.example.chess.model.Move
+import com.example.chess.model.pieces.King
+import com.example.chess.model.pieces.Pawn
+import com.example.chess.model.pieces.Piece
+import com.example.chess.model.pieces.Queen
 
 object Game {
-
-
-        
-
 
     var board: MutableList<MutableList<Block>> = mutableStateListOf()
     var movesPerformed: MutableList<Move> = mutableStateListOf()
@@ -35,7 +34,7 @@ object Game {
         
 
         //var arr = arrayOf(intArrayOf(1, 2, 3), intArrayOf(4, 5, 6), intArrayOf(7, 8, 9))
-        EvalFun.pawnPoints()
+        //EvalFun.pawnPoints()
 
     }
 
@@ -65,9 +64,9 @@ object Game {
             return validMoves
         }
 
+        //kings has to put kings out of check. all other moves are invalid
         if (kingIsCheck(enemyMoves, getKingPosition(team, gameState))) {
             for (i in teamMoves.indices) {
-                if (teamMoves[i].oldPosition == getKingPosition(team, gameState)) {
                     resolveMove(teamMoves[i])
                     if (team == "white"){
                         enemyMoves = getPossibleMoves("black",gameState,updatedLastMove())
@@ -82,17 +81,17 @@ object Game {
                         validMoves.add(teamMoves[i])
                         undoMove()
                     }
-                }
             }
             return validMoves
         }
         else{
+            //non king moves
             for (i in teamMoves.indices){
                     resolveMove(teamMoves[i])
                     if (team == "white"){
                         enemyMoves = getPossibleMoves("black",gameState,updatedLastMove())
                     }
-                    if (team == "black"){
+                    else if (team == "black"){
                         enemyMoves = getPossibleMoves("white",gameState,updatedLastMove())
                     }
                     if (kingIsCheck(enemyMoves, getKingPosition(team, gameState))){
@@ -235,6 +234,10 @@ object Game {
             }
         }
         movesPerformed.add(move)
+
+        if (board[move.newPosition[0]][move.newPosition[1]].piece.value == null){
+            print("hmm")
+        }
     }
 
     fun undoMove(){

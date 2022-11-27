@@ -87,7 +87,7 @@ fun AiBlockBlack(isBlack: Boolean, gameObject: Game, position: List<Int>, uiReme
                         if (possibleMoves[i].oldPosition[0] == lastClickPosition[0] && possibleMoves[i].oldPosition[1] == lastClickPosition[1]){
                             Game.resolveMove(possibleMoves[i])
                             uiRemembrance.changeFirstClick(!firstClick.value)
-                            Game.resolveMove(EvalFun.minVal(-10000000,1000000, 4, System.currentTimeMillis(), 15)[1] as Move)
+                            Game.resolveMove(EvalFun.minVal(-10000000,10000000, 3, System.currentTimeMillis(), 15)[1] as Move)
                             break
                         }
                     }
