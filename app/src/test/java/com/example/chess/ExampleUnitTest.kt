@@ -67,9 +67,11 @@ class ExampleUnitTest {
         Game.resolveMove(Move(listOf(1,3), listOf(2,3), false, null,null))
         Game.resolveMove(Move(listOf(0,2), listOf(2,4), false, null,null))
 
-        val move = EvalFun.maxVal(-10000000, 1000000, 3, System.currentTimeMillis(), 15)[1] as Move
-
-
+        val elapsed = measureTimeMillis {
+            val move = EvalFun.maxVal(-10000000, 1000000, 3, System.currentTimeMillis(), 15)[1] as Move
+        }
+        val nodes = EvalFun.nodeCounter
+        EvalFun.nodeCounter = 0
     }
 
     @Test
@@ -82,6 +84,7 @@ class ExampleUnitTest {
         val elapsed = measureTimeMillis {
             val moveList = Game.getValidMoves(Game.board, "white")
         }
+
         print(elapsed)
     }
 
