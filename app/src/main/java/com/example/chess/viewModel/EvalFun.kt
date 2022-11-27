@@ -24,64 +24,69 @@ object EvalFun {
 
 
     //returns the value of a game (this is the eval score for our algorithm)
-    private fun heuristics(gameState: MutableList<MutableList<Block>>): Int {
+    fun heuristics(gameState: MutableList<MutableList<Block>>): Int {
         var value = 0
         for (i in gameState.indices) {
             for (j in gameState[i].indices) {
                 if (gameState[i][j].piece.value != null) {
                     if (gameState[i][j].piece.value!!.team == "black") {
-                        when (gameState[i][j].piece.value) {
-                            is King -> {
-                                val enemyMoves = getValidMoves(board, "white")
-                                if (kingIsMate(enemyMoves, listOf(i, j))) {
-                                    value -= 100000
-                                } else if (kingIsCheck(enemyMoves, listOf(i, j))) {
-                                    value -= 500000
-                                } else {
-                                    value += 10000
+                        if (gameState[i][j].piece.value is King) {
+                            val enemyMoves = getValidMoves(board, "white")
+                            if (kingIsMate(enemyMoves, listOf(i, j))) {
+                                value -= 100000
+                            } else if (kingIsCheck(enemyMoves, listOf(i, j))) {
+                                value -= 500000
+                            } else {
+                                value += 10000
+                            }
+
+                            //if king has made a castle and hasnt moved from it (little less valuable than losing a pawn)
+                            if (gameState[i][j].piece.value!!.moveCounter == 1 ){
+                                if (i == 0 && j == 6){
+                                    value += 10
                                 }
-                                //if king has made a castle and hasnt moved from it (less valuable than losing a pawn)
-                                if (gameState[i][j].piece.value!!.moveCounter == 1 ){
-                                    if (i == 7 && j == 6){
-                                        value += 50
-                                    }
-                                    else if (i == 7 && j == 2){
-                                        value += 50
-                                    }
+                                else if (i == 0 && j == 2){
+                                    value += 10
                                 }
                             }
-                            is Queen ->{
-                                value += 900
-                                if (i in 1..7){
-                                    value +=9
-                                }
+
+                        }
+                        if (gameState[i][j].piece.value is Queen) {
+                            value += 900
+                            //queen outside of back is valued
+                            if (i in 1..6){
+                                value +=9
                             }
-                            is Rook -> {value += 500
-                                if (i in 2..5 && j in 2..5){
-                                    value += 5
-                                }
+                        }
+                        if (gameState[i][j].piece.value is Rook) {
+                            value += 500
+                            //rook in center
+                            if (i in 2..5 && j in 2..5){
+                                value += 5
                             }
-                            is Bishop -> {
-                                value += 300
-                                if (i in 1..7){
-                                    value += 3
-                                }
+                        }
+                        if (gameState[i][j].piece.value is Bishop) {
+                            value += 300
+                            //bishop outside of back is valued
+                            if (i in 1..6){
+                                value += 3
                             }
-                            is Knight -> {
-                                value += 300
-                                if (i in 2..5 && j in 2..5){
-                                    value += 3
-                                }
+                        }
+                        if (gameState[i][j].piece.value is Knight) {
+                            value += 300
+                            //centered knight
+                            if (i in 2..5 && j in 2..5){
+                                value += 3
                             }
-                            is Pawn ->  {
-                                value += 100
-                                if (i in 2..5 && j in 2..5){
-                                    value += 1
-                                }
+                        }
+                        if (gameState[i][j].piece.value is Pawn) {
+                            value += 100
+                            //center piece pawns valued
+                            if (i in 2..5 && j in 2..5){
+                                value += 1
                             }
                         }
                     }
-
                     if (gameState[i][j].piece.value!!.team == "white") {
                         if (gameState[i][j].piece.value is King) {
                             val enemyMoves = getValidMoves(board, "black")
@@ -108,7 +113,7 @@ object EvalFun {
                         if (gameState[i][j].piece.value is Queen) {
                             value -= 900
                             //queen outside of back is valued
-                            if (i in 1..7){
+                            if (i in 1..6){
                                 value -=9
                             }
                         }
@@ -122,7 +127,7 @@ object EvalFun {
                         if (gameState[i][j].piece.value is Bishop) {
                             value -= 300
                             //bishop outside of back is valued
-                            if (i in 1..7){
+                            if (i in 1..6){
                                 value -= 3
                             }
                         }
@@ -145,7 +150,6 @@ object EvalFun {
                 }
             }
         }
-
         return value
     }
 
@@ -228,6 +232,8 @@ object EvalFun {
 
         //sort moves from highest score to lowest
         val weightedMovelist = getSortedWeightedMovelist(moveList)
+
+
 
 
         for (i in weightedMovelist.indices) {

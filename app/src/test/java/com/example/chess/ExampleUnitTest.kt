@@ -85,4 +85,11 @@ class ExampleUnitTest {
         print(elapsed)
     }
 
+    @Test
+    fun heuristics(){
+
+        val value = EvalFun.heuristics(Game.board)
+        print("fff")
+    }
+
 }
