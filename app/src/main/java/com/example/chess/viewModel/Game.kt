@@ -2,11 +2,12 @@ package com.example.chess.viewModel
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.ViewModel
 import com.example.chess.model.Block
 import com.example.chess.model.Move
 import com.example.chess.model.pieces.*
 
-class Game {
+class Game: ViewModel() {
 
     var board: MutableList<MutableList<Block>> = mutableStateListOf()
     var movesPerformed: MutableList<Move> = mutableStateListOf()

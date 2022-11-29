@@ -1,9 +1,10 @@
 package com.example.chess.viewModel
 
+import androidx.lifecycle.ViewModel
 import com.example.chess.model.Move
 import com.example.chess.model.UImodel.UiValues
 
-class UiViewModel {
+class UiViewModel: ViewModel() {
     val uiModel = UiValues()
     fun changeFirstClick(bool: Boolean){
         uiModel.firstClick.value = bool
