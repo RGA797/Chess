@@ -169,11 +169,8 @@ object EvalFun {
         //we go through every possible branch from the current node, then find the min,value
         //we then set a new minValue if needed
         val moveList = getValidMoves(board, "black")
-        if (moveList.isEmpty()){
-            print("error")
-        }
-
         var alphaTemp = alpha
+        if (moveList.isNotEmpty()){
 
         //sorting movelist check order
         val weightedMovelist = getSortedWeightedMovelist(moveList)
@@ -203,6 +200,7 @@ object EvalFun {
                 }
             }
         }
+        }
 
         return listOf(maxValue, bestMove)
     }
@@ -216,6 +214,8 @@ object EvalFun {
         var duration: Double
         //reached depth
 
+
+
         if (depth == 0) {
             val value = heuristics(board)
             return listOf(value, null)
@@ -224,17 +224,11 @@ object EvalFun {
         //we go through every possible branch from the current node, then find the min,value
         //we then set a new minValue if needed
         val moveList = getValidMoves(board, "white")
-        if (moveList.isEmpty()){
-            print("error")
-        }
-
         var betaTemp = beta
+        if (moveList.isNotEmpty()){
 
         //sort moves from highest score to lowest
         val weightedMovelist = getSortedWeightedMovelist(moveList)
-
-
-
 
         for (i in weightedMovelist.indices) {
             duration = (System.currentTimeMillis() - startTime) / 1000.0
@@ -260,6 +254,7 @@ object EvalFun {
                     break
                 }
             }
+        }
         }
 
         return listOf(minValue, bestMove)
