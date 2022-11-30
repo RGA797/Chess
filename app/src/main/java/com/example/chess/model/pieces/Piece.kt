@@ -1,6 +1,9 @@
-package com.example.chess.model
+package com.example.chess.model.pieces
 
-    abstract class Piece(
+import com.example.chess.model.Block
+import com.example.chess.model.Move
+
+abstract class Piece(
         val team: String
     ) {
         var moveCounter = 0

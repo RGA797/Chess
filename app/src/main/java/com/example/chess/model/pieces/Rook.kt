@@ -1,6 +1,9 @@
-package com.example.chess.model
+package com.example.chess.model.pieces
 
-class Bishop(team: String) : Piece(team) {
+import com.example.chess.model.Block
+import com.example.chess.model.Move
+
+class Rook(team: String) : Piece(team) {
     var moveList: MutableList<Move> = mutableListOf()
     //returns a list of all possible moves
     private fun checkMoves(xOffset: Int, yOffset:Int, gameState: List<List<Block>>, piecePosition: List<Int>){
@@ -9,11 +12,11 @@ class Bishop(team: String) : Piece(team) {
             try {
                 val newPiecePosition = listOf(piecePosition[0]+(i*xOffset), piecePosition[1]+(i*yOffset))
                 val newBlock = gameState[newPiecePosition[0]][newPiecePosition[1]]
-                if (newBlock.piece == null ){
+                if (newBlock.piece.value == null ){
                     moveList.add(Move(piecePosition, newPiecePosition, false, null, null))
                 }
-                else if (newBlock.piece != null){
-                    if (newBlock.piece!!.team != currentBlock.piece!!.team){
+                else if (newBlock.piece.value != null){
+                    if (newBlock.piece.value!!.team != currentBlock.piece.value!!.team){
                         moveList.add(Move(piecePosition, newPiecePosition, true, newPiecePosition, null))
                     }
                     break
@@ -32,13 +35,11 @@ class Bishop(team: String) : Piece(team) {
         lastMove: Move?
     ): MutableList<Move> {
         moveList.clear()
-
-        checkMoves(1,1, gameState, piecePosition)
-        checkMoves(1,-1, gameState, piecePosition)
-        checkMoves(-1,1, gameState, piecePosition)
-        checkMoves(-1,-1, gameState, piecePosition)
+        checkMoves(1,0, gameState, piecePosition)
+        checkMoves(-1,0, gameState, piecePosition)
+        checkMoves(0,1, gameState, piecePosition)
+        checkMoves(0,-1, gameState, piecePosition)
         return moveList
+
     }
-
-
 }

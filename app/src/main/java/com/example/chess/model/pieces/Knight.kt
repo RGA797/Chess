@@ -1,4 +1,7 @@
-package com.example.chess.model
+package com.example.chess.model.pieces
+
+import com.example.chess.model.Block
+import com.example.chess.model.Move
 
 class Knight(team: String) : Piece(team) {
     var moveList: MutableList<Move> = mutableListOf()
@@ -8,11 +11,11 @@ class Knight(team: String) : Piece(team) {
             try {
                 val newPiecePosition = listOf(piecePosition[0]+xOffset, piecePosition[1]+yOffset)
                 val newBlock = gameState[newPiecePosition[0]][newPiecePosition[1]]
-                if (newBlock.piece == null ){
+                if (newBlock.piece.value == null ){
                     moveList.add(Move(piecePosition, newPiecePosition, false, null, null))
                 }
-                else if (newBlock.piece != null){
-                    if (newBlock.piece!!.team != currentBlock.piece!!.team){
+                else if (newBlock.piece.value != null){
+                    if (newBlock.piece.value!!.team != currentBlock.piece.value!!.team){
                         moveList.add(Move(piecePosition, newPiecePosition, true, newPiecePosition, null))
                     }
                 }
