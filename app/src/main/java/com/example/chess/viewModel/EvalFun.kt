@@ -178,6 +178,7 @@ object EvalFun {
         for (i in weightedMovelist.indices) {
             duration = (System.currentTimeMillis() - startTime) / 1000.0
             if (duration < timeLimit) {
+                if (weightedMovelist[i][0] != null){
                 resolveMove(weightedMovelist[i][0] as Move)
                 val nodeResult = minVal(alphaTemp, beta, depth - 1, startTime, timeLimit)
                 val nodeValue = nodeResult[0] as Int
@@ -198,6 +199,7 @@ object EvalFun {
                 if (beta <= alphaTemp) {
                     break
                 }
+            }
             }
         }
         }
@@ -233,6 +235,7 @@ object EvalFun {
         for (i in weightedMovelist.indices) {
             duration = (System.currentTimeMillis() - startTime) / 1000.0
             if (duration < timeLimit) {
+                if (weightedMovelist[i][0] != null){
                 resolveMove(weightedMovelist[i][0] as Move)
                 val nodeResult = maxVal(alpha, betaTemp, depth - 1, startTime, timeLimit)
                 val nodeValue = nodeResult[0] as Int
@@ -253,6 +256,7 @@ object EvalFun {
                 if (betaTemp <= alpha) {
                     break
                 }
+            }
             }
         }
         }
