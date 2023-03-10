@@ -23,4 +23,4 @@ HOW TO PLAY?
 4. Repeat steps 2-3 until stale mate or a winner has been found.
 
 KNOWN ISSUES:
-the AI takes so long that the app will freeze up. you can span the wait button pupop to eventuallly see a move (not ideal). can be fixed by implementing a coroutine for long calculations with the min-max algorithm
+the AI takes so long that the app will freeze up. you can spam the wait button popup to eventuallly see a move (not ideal). can be fixed by implementing a coroutine for long calculations with the min-max algorithm
